@@ -1,6 +1,6 @@
 package com.carero.domain.resume;
 
-import com.carero.domain.User;
+import com.carero.domain.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

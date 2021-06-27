@@ -1,4 +1,7 @@
-package com.carero.domain;
+package com.carero.domain.review;
+
+import com.carero.domain.RoleType;
+import com.carero.domain.user.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -1,4 +1,4 @@
-package com.carero.domain;
+package com.carero.domain.match;
 
 import com.carero.domain.recruit.Recruit;
 import com.carero.domain.resume.Resume;

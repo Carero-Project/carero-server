@@ -1,9 +1,7 @@
 package com.carero.domain.user;
 
 import com.carero.domain.Gender;
-import org.aspectj.lang.annotation.After;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
+import com.carero.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

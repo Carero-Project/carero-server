@@ -22,14 +22,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 class RecruitServiceTest {
 
-    @Autowired UserRepository userRepository;
+    @Autowired UserService userService;
     @Autowired RecruitService recruitService;
     @Autowired SubCatRepository subCatRepository;
 
     @Test
     public void recruit작성() throws Exception {
         //given
-        User user = userRepository.save(User.builder()
+        User user = User.builder()
                 .password("12345")
                 .username("회원A")
                 .age(30)
@@ -39,9 +39,9 @@ class RecruitServiceTest {
                 .city("전라남도")
                 .sigungu("광주광역시")
                 .eupmyeondong("소소동")
-                .build());
+                .build();
 
-        userRepository.save(user);
+        userService.join(user);
         SubCategory subCat1 = subCatRepository.findById(1L);
         SubCategory subCat2 = subCatRepository.findById(2L);
 

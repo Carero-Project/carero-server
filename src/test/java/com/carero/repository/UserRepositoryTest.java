@@ -1,6 +1,7 @@
-package com.carero.domain.user;
+package com.carero.repository;
 
 import com.carero.domain.Gender;
+import com.carero.domain.user.User;
 import com.carero.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

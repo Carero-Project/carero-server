@@ -17,7 +17,7 @@ public class WantedPlaceSeq {
     @Column(nullable = false)
     private int seq;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resume_wanted_info_id")
     private ResumeWantedInfo resumeWantedInfo;
 }

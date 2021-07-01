@@ -2,11 +2,13 @@ package com.carero.domain.resume;
 
 import com.carero.domain.cat.SubCategory;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class ResumeSubCat {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

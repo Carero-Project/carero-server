@@ -3,12 +3,14 @@ package com.carero.domain.match;
 import com.carero.domain.recruit.Recruit;
 import com.carero.domain.resume.Resume;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Match {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "match_id")

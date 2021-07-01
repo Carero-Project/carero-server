@@ -1,12 +1,15 @@
 package com.carero.domain.recruit;
 
 import com.carero.domain.cat.SubCategory;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class RecruitSubCat {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +23,10 @@ public class RecruitSubCat {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_category_id")
     private SubCategory subCategory;
+
+    @Builder
+    public RecruitSubCat(Recruit recruit, SubCategory subCategory) {
+        this.recruit = recruit;
+        this.subCategory = subCategory;
+    }
 }

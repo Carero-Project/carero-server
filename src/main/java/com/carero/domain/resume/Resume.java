@@ -2,12 +2,14 @@ package com.carero.domain.resume;
 
 import com.carero.domain.user.User;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@NoArgsConstructor
 public class Resume {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

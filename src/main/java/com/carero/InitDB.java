@@ -1,7 +1,9 @@
 package com.carero;
 
+import com.carero.domain.Gender;
 import com.carero.domain.cat.Category;
 import com.carero.domain.cat.SubCategory;
+import com.carero.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,21 +13,49 @@ import javax.persistence.EntityManager;
 
 @Component
 @RequiredArgsConstructor
-public class InitCat {
+public class InitDB {
 
-    private final InitCatService initCatService;
+    private final InitService initService;
 
     @PostConstruct
     public void init(){
-        initCatService.catInit();
+        initService.catInit();
+        initService.userInit();
     }
 
     @Component
     @Transactional
     @RequiredArgsConstructor
-    static class InitCatService {
+    static class InitService {
         private final EntityManager em;
 
+        public void userInit(){
+
+            String pass = "12345";
+            String name = "회원A";
+            int age = 30;
+            Gender gender = Gender.MALE;
+            String email = "kkkkk@naver.com";
+            String tel = "010-8888-8888";
+            String city = "전라남도";
+            String sigungu = "광주광역시";
+            String eupmyeondong = "무슨동";
+
+            User user = User.builder()
+                    .password(pass)
+                    .username(name)
+                    .age(age)
+                    .gender(gender)
+                    .email(email)
+                    .tel(tel)
+                    .city(city)
+                    .sigungu(sigungu)
+                    .eupmyeondong(eupmyeondong)
+                    .build();
+
+            em.persist(user);
+
+        }
         public void catInit(){
             Category cat1 = new Category("아동");
             Category cat2 = new Category("노인 & 장애인");

@@ -21,5 +21,9 @@ public class RecruitRepository {
         return em.find(Recruit.class, id);
     }
 
+    public List<Recruit> findAll(){
+        return em.createQuery("select r from Recruit r",Recruit.class).getResultList();
+    }
+
 
 }

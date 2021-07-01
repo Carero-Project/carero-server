@@ -1,7 +1,9 @@
 package com.carero.domain.recruit;
 
+import com.carero.domain.Gender;
 import com.carero.domain.cat.SubCategory;
 import com.carero.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -41,18 +43,31 @@ public class Recruit {
     private String title;
 
     @Column(nullable = false)
-    private LocalDateTime created_date;
+    private LocalDateTime createdDate;
 
     @Column(nullable = false)
-    private LocalDateTime modified_date;
-
-    @Column(nullable = false)
-    private LocalDateTime end_date;
+    private LocalDateTime modifiedDate;
 
     @Column(nullable = false)
     private Boolean status;
 
     @Column(nullable = false, length = 11)
     private int viewCount;
+
+    @Builder
+    public Recruit(User user, WorkInfo workInfo, TargetInfo targetInfo, WantedInfo wantedInfo,
+                   EtcInfo etcInfo, String title){
+        this.user = user;
+        this.workInfo = workInfo;
+        this.targetInfo = targetInfo;
+        this.wantedInfo = wantedInfo;
+        this.etcInfo = etcInfo;
+        this.title = title;
+        this.createdDate = LocalDateTime.now();
+        this.modifiedDate = this.createdDate;
+        this.status = false;
+        this.viewCount = 0;
+
+    }
 
 }

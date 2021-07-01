@@ -1,11 +1,16 @@
 package com.carero.domain.recruit;
 
+import com.carero.domain.cat.SubCategory;
 import com.carero.domain.user.User;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
+@Getter
 public class Recruit {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

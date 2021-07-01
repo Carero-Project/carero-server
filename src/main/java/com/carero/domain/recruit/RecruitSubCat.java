@@ -1,10 +1,12 @@
 package com.carero.domain.recruit;
 
 import com.carero.domain.cat.SubCategory;
+import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class RecruitSubCat {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

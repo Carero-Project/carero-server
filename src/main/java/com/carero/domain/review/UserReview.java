@@ -2,11 +2,13 @@ package com.carero.domain.review;
 
 import com.carero.domain.RoleType;
 import com.carero.domain.user.User;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
 public class UserReview {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_review_id")

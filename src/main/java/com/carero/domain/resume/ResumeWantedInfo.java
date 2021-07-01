@@ -1,10 +1,13 @@
 package com.carero.domain.resume;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
+@Getter
 public class ResumeWantedInfo {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

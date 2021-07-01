@@ -1,11 +1,14 @@
 package com.carero.domain.recruit;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
+@Getter
 public class WorkInfo {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

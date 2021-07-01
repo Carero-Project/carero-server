@@ -1,8 +1,11 @@
 package com.carero.domain.recruit;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class EtcInfo {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "etc_info_id")

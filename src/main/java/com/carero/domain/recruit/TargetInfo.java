@@ -1,10 +1,12 @@
 package com.carero.domain.recruit;
 
+import lombok.Getter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class TargetInfo {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

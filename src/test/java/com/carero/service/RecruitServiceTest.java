@@ -9,6 +9,7 @@ import com.carero.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,6 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@Transactional
 class RecruitServiceTest {
 
     @Autowired UserRepository userRepository;
@@ -99,15 +101,14 @@ class RecruitServiceTest {
 
         Long recruitId = recruitService.create(recruit);
         //when
-
         Recruit findRecruit = recruitService.findOne(recruitId);
 
         //then
+
         assertThat(findRecruit.getTitle()).isEqualTo(recruit.getTitle());
         assertThat(findRecruit.getUser().getUsername()).isEqualTo(user.getUsername());
         assertThat(findRecruit.getEtcInfo().getInterviewFee()).isEqualTo(etcInfo.getInterviewFee());
-
-        assertThat(findRecruit.getCats().get(0)).
+        assertThat(findRecruit.getCats()).isSameAs(recruit.getCats());
 
 
     }

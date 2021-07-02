@@ -35,7 +35,15 @@ public class UserService {
         return userRepository.findOne(userId);
     }
 
+    public List<User> findByName(String name){
+        return userRepository.findByName(name);
+    }
     public List<User> findAll(){
         return userRepository.findAll();
+    }
+
+    @Transactional
+    public void delete(Long userId) {
+        userRepository.deleteById(userId);
     }
 }

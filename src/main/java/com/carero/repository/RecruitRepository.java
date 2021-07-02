@@ -26,4 +26,15 @@ public class RecruitRepository {
     }
 
 
+    public void deleteAll() {
+        List<Recruit> recruits = findAll();
+        for (Recruit recruit : recruits) {
+            em.remove(recruit);
+        }
+    }
+
+    public void deleteById(Long id) {
+        Recruit recruit = findOne(id);
+        em.remove(recruit);
+    }
 }

@@ -28,4 +28,14 @@ public class RecruitService {
     public List<Recruit> findAll(){
         return recruitRepository.findAll();
     }
+
+    @Transactional
+    public void deleteAll() {
+        recruitRepository.deleteAll();
+    }
+
+    @Transactional
+    public void deleteById(Long id){
+        recruitRepository.deleteById(id);
+    }
 }

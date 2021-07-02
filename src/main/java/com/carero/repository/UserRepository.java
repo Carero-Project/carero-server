@@ -37,4 +37,9 @@ public class UserRepository {
                 .setParameter("name",name)
                 .getResultList();
     }
+
+    public void deleteById(Long id){
+        User one = findOne(id);
+        em.remove(one);
+    }
 }

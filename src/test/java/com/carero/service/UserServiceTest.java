@@ -50,9 +50,8 @@ class UserServiceTest {
         Assertions.assertThat(user).isEqualTo(userService.findOne(userId));
     }
 
-    @Test()
+    @Test
     public void 중복처리() throws Exception {
-        //given
 
         //given
         String pass = "12345";
@@ -96,4 +95,17 @@ class UserServiceTest {
         });
     }
 
+
+    @Test
+    public void 유저삭제() throws Exception {
+        //given
+
+        userService.delete(1L);
+        //when
+
+        User one = userService.findOne(1L);
+        //then
+        Assertions.assertThat(one).isEqualTo(null);
+
+    }
 }

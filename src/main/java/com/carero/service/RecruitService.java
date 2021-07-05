@@ -38,4 +38,9 @@ public class RecruitService {
     public void deleteById(Long id){
         recruitRepository.deleteById(id);
     }
+
+    public void update(Long id, Recruit recruit) {
+        Recruit one = recruitRepository.findOne(id);
+
+    }
 }

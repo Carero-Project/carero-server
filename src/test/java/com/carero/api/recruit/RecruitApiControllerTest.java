@@ -1,16 +1,12 @@
 package com.carero.api.recruit;
 
-import com.carero.InitDB;
 import com.carero.domain.Gender;
 import com.carero.domain.recruit.*;
 import com.carero.domain.user.User;
-import com.carero.dto.RecruitPostDto;
-import com.carero.dto.RecruitPostResponseDto;
-import com.carero.dto.SubCategoryDto;
-import com.carero.repository.RecruitRepository;
+import com.carero.dto.recruit.*;
 import com.carero.service.RecruitService;
 import com.carero.service.UserService;
-import org.assertj.core.api.Assertions;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -89,14 +84,14 @@ class RecruitApiControllerTest {
     @DisplayName("Recruit API: POST Recruit")
     public void createRecruit() throws Exception {
         //given
-        TargetInfo targetInfo = TargetInfo.builder()
+        TargetInfoDto targetInfo = TargetInfoDto.builder()
                 .targetAge(10)
                 .carePlace(null)
                 .remark("초등학생입니다. 용해초 재학중. 왜소한 체격")
                 .species(null)
                 .build();
 
-        WantedInfo wantedInfo = WantedInfo.builder()
+        WantedInfoDto wantedInfo = WantedInfoDto.builder()
                 .wantedAge("30")
                 .wantedCareer("3년이상")
                 .wantedEducation("대학2년제")
@@ -104,7 +99,7 @@ class RecruitApiControllerTest {
                 .wantedGender("남")
                 .build();
 
-        WorkInfo workInfo = WorkInfo.builder()
+        WorkInfoDto workInfo = WorkInfoDto.builder()
                 .workWeek("월화금")
                 .workType("출퇴근")
                 .workStartDate(LocalDate.now())
@@ -121,7 +116,7 @@ class RecruitApiControllerTest {
                 .eupmyeondong("용당동")
                 .build();
 
-        EtcInfo etcInfo = EtcInfo.builder()
+        EtcInfoDto etcInfo = EtcInfoDto.builder()
                 .interviewFee("10000원")
                 .isContract(false)
                 .isInsurance(false)
@@ -133,49 +128,26 @@ class RecruitApiControllerTest {
         cats.add(new SubCategoryDto(2L));
 
         String title = "케어하실분 구합니다.";
-        RecruitPostDto recruitPostDto = RecruitPostDto.builder()
+        CreateRecruitDto recruitPostDto = CreateRecruitDto.builder()
                 .title(title)
                 .userId(testUserId)
                 .cats(cats)
-                .city(workInfo.getCity())
-                .sigungu(workInfo.getSigungu())
-                .eupmyeondong(workInfo.getEupmyeondong())
-                .workWeek(workInfo.getWorkWeek())
-                .workType(workInfo.getWorkType())
-                .workStartDate(workInfo.getWorkStartDate())
-                .workTermDate(workInfo.getWorkTermDate())
-                .workingStartHour(workInfo.getWorkingStartHour())
-                .workingEndHour(workInfo.getWorkingEndHour())
-                .wage(workInfo.getWage())
-                .isCctv(workInfo.getIsCctv())
-                .familyInfo(workInfo.getFamilyInfo())
-                .petInfo(workInfo.getPetInfo())
-                .mainInfo(workInfo.getMainInfo())
-                .targetAge(targetInfo.getTargetAge())
-                .remark(targetInfo.getRemark())
-                .species(targetInfo.getSpecies())
-                .wantedAge(wantedInfo.getWantedAge())
-                .wantedGender(wantedInfo.getWantedGender())
-                .wantedCareer(wantedInfo.getWantedCareer())
-                .wantedEducation(wantedInfo.getWantedEducation())
-                .wantedNationality(wantedInfo.getWantedNationality())
-                .prerequisite(wantedInfo.getPrerequisite())
-                .preferential(wantedInfo.getPreferential())
-                .isContract(etcInfo.getIsContract())
-                .isInsurance(etcInfo.getIsInsurance())
-                .submitDocument(etcInfo.getSubmitDocument())
-                .interviewFee(etcInfo.getInterviewFee())
+                .workInfo(workInfo)
+                .targetInfo(targetInfo)
+                .wantedInfo(wantedInfo)
+                .etcInfo(etcInfo)
                 .build();
+
 
         String url = "http://localhost:" + port + "/recruits";
 
         //when
-        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, recruitPostDto, Long.class);
+        ResponseEntity<CreateRecruitResponseDto> responseEntity = restTemplate.postForEntity(url, recruitPostDto, CreateRecruitResponseDto.class);
 
         //then
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+        assertThat(responseEntity.getBody().getId()).isGreaterThan(0L);
 
         List<Recruit> all = recruitService.findAll();
         assertThat(all.get(0).getTitle()).isEqualTo(title);

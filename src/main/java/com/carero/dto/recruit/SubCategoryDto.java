@@ -1,4 +1,4 @@
-package com.carero.dto;
+package com.carero.dto.recruit;
 
 import lombok.Data;
 

@@ -25,7 +25,7 @@ public class Recruit {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "recruit", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recruit", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RecruitSubCat> cats = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL ,orphanRemoval = true)
@@ -60,6 +60,23 @@ public class Recruit {
     private int viewCount;
 
 
+    public void changeInfo(WorkInfo workInfo, TargetInfo targetInfo, WantedInfo wantedInfo,EtcInfo etcInfo){
+        this.workInfo = workInfo;
+        this.targetInfo = targetInfo;
+        this.wantedInfo = wantedInfo;
+        this.etcInfo = etcInfo;
+        modifiedDate = LocalDateTime.now();
+    }
+
+
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void addCat(RecruitSubCat subCat){
+        this.getCats().add(subCat);
+        subCat.connectRecruit(this);
+    }
 
     @Builder
     public Recruit(User user, WorkInfo workInfo, TargetInfo targetInfo, WantedInfo wantedInfo,

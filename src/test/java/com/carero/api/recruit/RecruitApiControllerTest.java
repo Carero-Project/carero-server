@@ -6,7 +6,6 @@ import com.carero.domain.user.User;
 import com.carero.dto.recruit.*;
 import com.carero.service.RecruitService;
 import com.carero.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -142,7 +141,7 @@ class RecruitApiControllerTest {
         String url = "http://localhost:" + port + "/recruits";
 
         //when
-        ResponseEntity<CreateRecruitResponseDto> responseEntity = restTemplate.postForEntity(url, recruitPostDto, CreateRecruitResponseDto.class);
+        ResponseEntity<RecruitResponseDto> responseEntity = restTemplate.postForEntity(url, recruitPostDto, RecruitResponseDto.class);
 
         //then
 

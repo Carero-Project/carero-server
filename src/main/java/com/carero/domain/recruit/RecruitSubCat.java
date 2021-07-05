@@ -29,4 +29,8 @@ public class RecruitSubCat {
         this.recruit = recruit;
         this.subCategory = subCategory;
     }
+
+    public void connectRecruit(Recruit recruit){
+        this.recruit = recruit;
+    }
 }

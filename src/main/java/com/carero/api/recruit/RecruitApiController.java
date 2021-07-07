@@ -3,9 +3,11 @@ package com.carero.api.recruit;
 import com.carero.domain.cat.SubCategory;
 import com.carero.domain.recruit.Recruit;
 import com.carero.domain.user.User;
-import com.carero.dto.recruit.CreateRecruitDto;
-import com.carero.dto.recruit.RecruitResponseDto;
-import com.carero.dto.recruit.SubCategoryDto;
+import com.carero.dto.ResultPaging;
+import com.carero.dto.recruit.RecruitReadDto;
+import com.carero.dto.recruit.RecruitCreateUpdateDto;
+import com.carero.dto.recruit.RecruitCUDResponseDto;
+import com.carero.dto.recruit.SubCategoryCreateDto;
 import com.carero.service.RecruitService;
 import com.carero.service.SubCatService;
 import com.carero.service.UserService;
@@ -25,48 +27,60 @@ public class RecruitApiController {
     private final UserService userService;
     private final SubCatService subCatService;
 
+
+    @GetMapping("/recruits")
+    public ResultPaging<RecruitReadDto> readRecruits(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "8") int limit
+    ){
+        List<RecruitReadDto> recruits = recruitService.findAllWithCats(page*8, limit);
+        int count = recruitService.countAll();
+
+        return new ResultPaging(count, page, recruits);
+    }
+
     @PutMapping("/recruits/{id}")
-    public RecruitResponseDto updateRecruit(
-            @RequestBody CreateRecruitDto createRecruitDto,
+    public RecruitCUDResponseDto updateRecruit(
+            @RequestBody RecruitCreateUpdateDto recruitCreateUpdateDto,
             @PathVariable("id") Long id
             ){
 
-        User user = userService.findOne(createRecruitDto.getUserId());
+        User user = userService.findOne(recruitCreateUpdateDto.getUserId());
 
-        List<SubCategoryDto> catIds = createRecruitDto.getCats();
+        List<SubCategoryCreateDto> catIds = recruitCreateUpdateDto.getCats();
         List<SubCategory> subCats = catIds.stream()
                 .map(o -> subCatService.findOne(o.getId()))
                 .collect(Collectors.toList());
 
-        Recruit recruit = createRecruitDto.toEntity(user,subCats);
+        Recruit recruit = recruitCreateUpdateDto.toEntity(user,subCats);
         recruitService.update(id, recruit);
 
-        return new RecruitResponseDto(id);
+        return new RecruitCUDResponseDto(id);
     }
 
     @DeleteMapping("/recruits/{id}")
-    public ResponseEntity<RecruitResponseDto> deleteRecruit(
+    public ResponseEntity<RecruitCUDResponseDto> deleteRecruit(
             @PathVariable("id") Long id){
         recruitService.deleteById(id);
 
-        return new ResponseEntity<>(new RecruitResponseDto(id), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(new RecruitCUDResponseDto(id), HttpStatus.ACCEPTED);
     }
 
     @PostMapping("/recruits")
-    public ResponseEntity<RecruitResponseDto> createRecruit(@RequestBody CreateRecruitDto createRecruitDto){
-        User user = userService.findOne(createRecruitDto.getUserId());
+    public ResponseEntity<RecruitCUDResponseDto> createRecruit(@RequestBody RecruitCreateUpdateDto recruitCreateUpdateDto){
+        User user = userService.findOne(recruitCreateUpdateDto.getUserId());
         if(user == null){
             throw new IllegalStateException("해당 이름의 유저는 없습니다.");
         }
 
-        List<SubCategoryDto> catIds = createRecruitDto.getCats();
+        List<SubCategoryCreateDto> catIds = recruitCreateUpdateDto.getCats();
         List<SubCategory> subCats = catIds.stream()
                 .map(o -> subCatService.findOne(o.getId()))
                 .collect(Collectors.toList());
 
-        Recruit recruit = createRecruitDto.toEntity(user,subCats);
+        Recruit recruit = recruitCreateUpdateDto.toEntity(user,subCats);
         Long id = recruitService.create(recruit);
 
-        return new ResponseEntity<>(new RecruitResponseDto(id), HttpStatus.CREATED);
+        return new ResponseEntity<>(new RecruitCUDResponseDto(id), HttpStatus.CREATED);
     }
 }

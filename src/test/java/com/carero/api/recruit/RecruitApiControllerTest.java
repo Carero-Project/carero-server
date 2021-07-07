@@ -80,7 +80,7 @@ class RecruitApiControllerTest {
     }
 
     @Test
-    @DisplayName("Recruit API: POST Recruit")
+    @DisplayName("Recruit API: Create Recruit")
     public void createRecruit() throws Exception {
         //given
         TargetInfoDto targetInfo = TargetInfoDto.builder()
@@ -122,12 +122,12 @@ class RecruitApiControllerTest {
                 .submitDocument("이력서")
                 .build();
 
-        List<SubCategoryDto> cats = new ArrayList<>();
-        cats.add(new SubCategoryDto(1L));
-        cats.add(new SubCategoryDto(2L));
+        List<SubCategoryCreateDto> cats = new ArrayList<>();
+        cats.add(new SubCategoryCreateDto(1L));
+        cats.add(new SubCategoryCreateDto(2L));
 
         String title = "케어하실분 구합니다.";
-        CreateRecruitDto recruitPostDto = CreateRecruitDto.builder()
+        RecruitCreateUpdateDto recruitPostDto = RecruitCreateUpdateDto.builder()
                 .title(title)
                 .userId(testUserId)
                 .cats(cats)
@@ -141,7 +141,7 @@ class RecruitApiControllerTest {
         String url = "http://localhost:" + port + "/recruits";
 
         //when
-        ResponseEntity<RecruitResponseDto> responseEntity = restTemplate.postForEntity(url, recruitPostDto, RecruitResponseDto.class);
+        ResponseEntity<RecruitCUDResponseDto> responseEntity = restTemplate.postForEntity(url, recruitPostDto, RecruitCUDResponseDto.class);
 
         //then
 

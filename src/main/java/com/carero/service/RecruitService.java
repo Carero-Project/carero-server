@@ -2,12 +2,14 @@ package com.carero.service;
 
 import com.carero.domain.recruit.Recruit;
 import com.carero.domain.recruit.RecruitSubCat;
+import com.carero.dto.recruit.RecruitReadDto;
 import com.carero.repository.RecruitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -54,5 +56,22 @@ public class RecruitService {
             origin.addCat(cat);
         }
 
+    }
+
+    public List<RecruitReadDto> findAllWithCats(int offset, int limit) {
+        List<Recruit> recruits = recruitRepository.findAllWithCats(offset, limit);
+
+        List<RecruitReadDto> result = recruits.stream()
+                .map(o -> new RecruitReadDto(o))
+                .collect(Collectors.toList());
+
+
+        return result;
+
+    }
+
+    public int countAll(){
+        List<Recruit> recruits = recruitRepository.findAll();
+        return recruits.size();
     }
 }

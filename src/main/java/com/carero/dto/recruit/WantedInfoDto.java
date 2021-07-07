@@ -17,6 +17,16 @@ public class WantedInfoDto {
     private String prerequisite;
     private String preferential;
 
+    public WantedInfoDto(WantedInfo wantedInfo) {
+        this.wantedAge = wantedInfo.getWantedAge();
+        this.wantedGender = wantedInfo.getWantedGender();
+        this.wantedCareer = wantedInfo.getWantedCareer();
+        this.wantedEducation = wantedInfo.getWantedEducation();
+        this.wantedNationality = wantedInfo.getWantedNationality();
+        this.prerequisite = wantedInfo.getPrerequisite();
+        this.preferential = wantedInfo.getPreferential();
+    }
+
     public WantedInfo toEntity(){
         WantedInfo wantedInfo = WantedInfo.builder()
                 .wantedAge(wantedAge)

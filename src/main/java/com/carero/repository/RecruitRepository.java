@@ -37,4 +37,20 @@ public class RecruitRepository {
         Recruit recruit = findOne(id);
         em.remove(recruit);
     }
+
+    public List<Recruit> findAllWithCats(int offset, int limit) {
+
+        return em.createQuery(
+                "select r from Recruit r" +
+                        " join fetch r.user u" +
+                        " join fetch r.workInfo wi" +
+                        " join fetch r.targetInfo ti" +
+                        " join fetch r.wantedInfo wti" +
+                        " join fetch r.etcInfo ei" +
+                        " order by r.id desc", Recruit.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+
+    }
 }

@@ -5,17 +5,13 @@ import com.carero.domain.recruit.*;
 import com.carero.domain.user.User;
 import lombok.Builder;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotEmpty;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
-public class CreateRecruitDto {
-    public CreateRecruitDto() {
+public class RecruitCreateUpdateDto {
+    public RecruitCreateUpdateDto() {
     }
 
     @NotEmpty
@@ -25,7 +21,7 @@ public class CreateRecruitDto {
     private String title;
 
     @NotEmpty
-    private List<SubCategoryDto> cats;
+    private List<SubCategoryCreateDto> cats;
 
     // WorkInfo
     @NotEmpty
@@ -44,10 +40,10 @@ public class CreateRecruitDto {
     EtcInfoDto etcInfo;
 
     @Builder
-    public CreateRecruitDto(@NotEmpty Long userId, @NotEmpty String title,
-                            @NotEmpty List<SubCategoryDto> cats, @NotEmpty WorkInfoDto workInfo,
-                            @NotEmpty TargetInfoDto targetInfo, @NotEmpty WantedInfoDto wantedInfo,
-                            @NotEmpty EtcInfoDto etcInfo) {
+    public RecruitCreateUpdateDto(@NotEmpty Long userId, @NotEmpty String title,
+                                  @NotEmpty List<SubCategoryCreateDto> cats, @NotEmpty WorkInfoDto workInfo,
+                                  @NotEmpty TargetInfoDto targetInfo, @NotEmpty WantedInfoDto wantedInfo,
+                                  @NotEmpty EtcInfoDto etcInfo) {
         this.userId = userId;
         this.title = title;
         this.cats = cats;

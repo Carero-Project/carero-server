@@ -18,6 +18,13 @@ public class EtcInfoDto {
     private String submitDocument;
     private String interviewFee;
 
+    public EtcInfoDto(EtcInfo etcInfo) {
+        this.isContract = etcInfo.getIsContract();
+        this.isInsurance = etcInfo.getIsInsurance();
+        this.submitDocument = etcInfo.getSubmitDocument();
+        this.interviewFee = etcInfo.getInterviewFee();
+    }
+
     public EtcInfo toEntity(){
         EtcInfo etcInfo = EtcInfo.builder()
                 .isContract(isContract)

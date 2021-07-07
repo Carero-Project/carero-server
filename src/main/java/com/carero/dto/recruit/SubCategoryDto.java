@@ -4,12 +4,12 @@ import lombok.Data;
 
 @Data
 public class SubCategoryDto {
-    private Long id;
-
     public SubCategoryDto() {
     }
 
-    public SubCategoryDto(Long id) {
-        this.id = id;
+    private String subCatName;
+
+    public SubCategoryDto(String subCatName) {
+        this.subCatName = subCatName;
     }
 }

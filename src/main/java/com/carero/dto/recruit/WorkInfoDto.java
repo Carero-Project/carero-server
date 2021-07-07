@@ -36,6 +36,23 @@ public class WorkInfoDto {
     private String petInfo;
     private String mainInfo;
 
+    public WorkInfoDto(WorkInfo workInfo) {
+        this.city = workInfo.getCity();
+        this.sigungu = workInfo.getSigungu();
+        this.eupmyeondong = workInfo.getEupmyeondong();
+        this.workWeek = workInfo.getWorkWeek();
+        this.workType = workInfo.getWorkType();
+        this.workStartDate = workInfo.getWorkStartDate();
+        this.workTermDate = workInfo.getWorkTermDate();
+        this.workingStartHour = workInfo.getWorkingStartHour();
+        this.workingEndHour = workInfo.getWorkingEndHour();
+        this.wage = workInfo.getWage();
+        this.isCctv = workInfo.getIsCctv();
+        this.familyInfo = workInfo.getFamilyInfo();
+        this.petInfo = workInfo.getPetInfo();
+        this.mainInfo = workInfo.getMainInfo();
+    }
+
     public WorkInfo toEntity(){
 
         WorkInfo workInfo = WorkInfo.builder()

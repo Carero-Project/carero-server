@@ -35,4 +35,12 @@ public class TargetInfoDto {
         this.carePlace = carePlace;
         this.species = species;
     }
+
+    public TargetInfoDto(TargetInfo targetInfo){
+        this.targetAge = targetInfo.getTargetAge();
+        this.remark = targetInfo.getRemark();
+        this.carePlace = targetInfo.getCarePlace();
+        this.species = targetInfo.getSpecies();
+
+    }
 }

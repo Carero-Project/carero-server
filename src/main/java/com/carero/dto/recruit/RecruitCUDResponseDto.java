@@ -3,13 +3,13 @@ package com.carero.dto.recruit;
 import lombok.Data;
 
 @Data
-public class RecruitResponseDto {
-    public RecruitResponseDto() {
+public class RecruitCUDResponseDto {
+    public RecruitCUDResponseDto() {
     }
 
     private Long id;
 
-    public RecruitResponseDto(Long id) {
+    public RecruitCUDResponseDto(Long id) {
         this.id = id;
     }
 }

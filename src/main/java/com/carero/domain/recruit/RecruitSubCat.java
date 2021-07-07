@@ -1,6 +1,7 @@
 package com.carero.domain.recruit;
 
 import com.carero.domain.cat.SubCategory;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class RecruitSubCat {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recruit_id")
+    @JsonIgnore
     private Recruit recruit;
 
     @ManyToOne(fetch = FetchType.LAZY)

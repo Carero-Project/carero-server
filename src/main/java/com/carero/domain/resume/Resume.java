@@ -1,18 +1,22 @@
 package com.carero.domain.resume;
 
-import com.carero.domain.User;
+import com.carero.domain.user.User;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Resume {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reusme_id")
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

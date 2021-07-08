@@ -1,8 +1,13 @@
 package com.carero.domain.resume;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class WantedPlaceSeq {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wanted_place_seq_id")
@@ -17,7 +22,7 @@ public class WantedPlaceSeq {
     @Column(nullable = false)
     private int seq;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resume_wanted_info_id")
     private ResumeWantedInfo resumeWantedInfo;
 }

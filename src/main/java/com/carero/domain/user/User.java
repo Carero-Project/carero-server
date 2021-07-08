@@ -1,15 +1,18 @@
-package com.carero.domain;
+package com.carero.domain.user;
 
+import com.carero.domain.Gender;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Getter @Setter
+@Getter
+@NoArgsConstructor
 public class User {
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="user_id")
     private Long id;
@@ -24,7 +27,7 @@ public class User {
     private int age;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 1, nullable = false)
+    @Column(nullable = false)
     private Gender gender;
 
     @Column(nullable = false)
@@ -45,4 +48,18 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime joinedDate;
 
+    @Builder
+    public User(String password, String username, int age, Gender gender,
+                String email, String tel, String city, String sigungu, String eupmyeondong){
+        this.password = password;
+        this.username = username;
+        this.age = age;
+        this.gender = gender;
+        this.email = email;
+        this.tel = tel;
+        this.city = city;
+        this.sigungu = sigungu;
+        this.eupmyeondong = eupmyeondong;
+        this.joinedDate = LocalDateTime.now();
+    }
 }

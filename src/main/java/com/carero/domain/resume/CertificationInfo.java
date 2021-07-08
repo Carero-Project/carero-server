@@ -1,8 +1,13 @@
 package com.carero.domain.resume;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class CertificationInfo {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

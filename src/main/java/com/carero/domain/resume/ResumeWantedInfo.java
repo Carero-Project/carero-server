@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -15,6 +16,9 @@ public class ResumeWantedInfo {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "resume_wanted_info_id")
     private Long id;
+
+    @OneToMany(mappedBy = "resumeWantedInfo")
+    private List<WantedPlaceSeq> wantedPlaceSeqs;
 
     private String wantedWeek;
     private LocalDateTime wantedStartDate;

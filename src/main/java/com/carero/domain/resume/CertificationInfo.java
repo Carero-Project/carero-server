@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -13,6 +15,9 @@ public class CertificationInfo {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "certification_info_id")
     private Long id;
+
+    @OneToMany(mappedBy = "certificationInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Certificate> certificates = new ArrayList<>();
 
     @Column(nullable = false)
     private Boolean agreeCctv;

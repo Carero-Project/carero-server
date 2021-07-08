@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,6 +21,17 @@ public class Resume {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ResumeSubCat> cats = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "certification_info_id")
+    private CertificationInfo certificationInfo;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "resume_wanted_info_id")
+    private ResumeWantedInfo resumeWantedInfo;
 
     @Column(nullable = false)
     private String title;

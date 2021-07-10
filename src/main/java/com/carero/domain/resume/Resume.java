@@ -1,6 +1,8 @@
 package com.carero.domain.resume;
 
+import com.carero.domain.cat.SubCategory;
 import com.carero.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,7 +25,7 @@ public class Resume {
     private User user;
 
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ResumeSubCat> cats = new ArrayList<>();
+    private List<ResumeSubCat> subCats = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "certification_info_id")
@@ -62,4 +64,32 @@ public class Resume {
     @Column(columnDefinition = "TEXT")
     private String detailInfo;
 
+    @Builder
+    public Resume(User user, List<SubCategory> subCats, CertificationInfo certificationInfo, ResumeWantedInfo resumeWantedInfo,
+                  String title, String nation, String educationInfo, String careerInfo, Boolean isParent, String contactTime, String detailInfo) {
+        this.user = user;
+        this.certificationInfo = certificationInfo;
+        this.resumeWantedInfo = resumeWantedInfo;
+        this.title = title;
+        this.nation = nation;
+        this.educationInfo = educationInfo;
+        this.careerInfo = careerInfo;
+        this.isParent = isParent;
+        this.contactTime = contactTime;
+        this.detailInfo = detailInfo;
+
+        this.createDate = LocalDateTime.now();
+        this.modifiedDate = this.createDate;
+        this.status = false;
+        this.viewCount = 0;
+
+        for (SubCategory cat : subCats) {
+            ResumeSubCat resumeSubCat = ResumeSubCat.builder()
+                    .resume(this)
+                    .subCategory(cat)
+                    .build();
+            this.subCats.add(resumeSubCat);
+        }
+
+    }
 }

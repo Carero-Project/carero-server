@@ -1,5 +1,6 @@
 package com.carero.domain.resume;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,4 +31,22 @@ public class CertificationInfo {
 
     @Column(nullable = false)
     private Boolean haveCrimeCert;
+
+    @Builder
+    public CertificationInfo(List<Certificate> certificates, Boolean agreeCctv, Boolean isInsurance, Boolean haveCrimeCert) {
+        this.certificates = certificates;
+        this.agreeCctv = agreeCctv;
+        this.isInsurance = isInsurance;
+        this.haveCrimeCert = haveCrimeCert;
+
+        if(!certificates.isEmpty()){
+            haveCertificate = true;
+
+            for (Certificate certificate : certificates) {
+                certificate.connectCertificationInfo(this);
+            }
+        }
+
+
+    }
 }

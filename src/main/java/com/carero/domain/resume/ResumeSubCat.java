@@ -29,4 +29,10 @@ public class ResumeSubCat {
     public void connectResume(Resume resume){
         this.resume = resume;
     }
+
+    @Builder
+    public ResumeSubCat(Resume resume, SubCategory subCategory) {
+        this.resume = resume;
+        this.subCategory = subCategory;
+    }
 }

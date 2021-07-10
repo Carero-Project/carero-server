@@ -38,7 +38,7 @@ public class RecruitRepository {
         em.remove(recruit);
     }
 
-    public List<Recruit> findAllWithCats(int offset, int limit) {
+    public List<Recruit> findAllWithPage(int offset, int limit) {
 
         return em.createQuery(
                 "select r from Recruit r" +

@@ -3,6 +3,7 @@ package com.carero.dto.recruit;
 import com.carero.domain.cat.SubCategory;
 import com.carero.domain.recruit.*;
 import com.carero.domain.user.User;
+import com.carero.dto.SubCategoryCreateDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -55,7 +56,7 @@ public class RecruitCreateUpdateDto {
 
 
 
-    public Recruit toEntity(User user, List<SubCategory> subCats) {
+    public Recruit createRecruit(User user, List<SubCategory> subCats) {
         WorkInfo workInfo = this.workInfo.toEntity();
 
         TargetInfo targetInfo = this.targetInfo.toEntity();

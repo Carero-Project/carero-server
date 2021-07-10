@@ -3,6 +3,7 @@ package com.carero.api.recruit;
 import com.carero.domain.Gender;
 import com.carero.domain.recruit.*;
 import com.carero.domain.user.User;
+import com.carero.dto.SubCategoryCreateDto;
 import com.carero.dto.recruit.*;
 import com.carero.service.RecruitService;
 import com.carero.service.UserService;
@@ -44,12 +45,13 @@ class RecruitApiControllerTest {
     @AfterAll
     public void tearDown() throws Exception {
         System.out.println(" ============== 딜리트 ================");
-        recruitService.deleteAll();
+        recruitService.deleteById(recruitId);
         System.out.println(" ============== 유저딜리트 ================");
         userService.delete(testUserId);
     }
 
     private Long testUserId;
+    private Long recruitId;
 
     @BeforeAll
     public void initDB() {
@@ -145,13 +147,16 @@ class RecruitApiControllerTest {
 
         //then
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(responseEntity.getBody().getId()).isGreaterThan(0L);
 
         List<Recruit> all = recruitService.findAll();
         assertThat(all.get(0).getTitle()).isEqualTo(title);
         assertThat(all.get(0).getEtcInfo().getInterviewFee()).isEqualTo(etcInfo.getInterviewFee());
         assertThat(all.get(0).getEtcInfo().getIsInsurance()).isEqualTo(etcInfo.getIsInsurance());
+
+        recruitId = all.get(0).getId();
+
 
     }
 }

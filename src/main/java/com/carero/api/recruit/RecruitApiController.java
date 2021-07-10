@@ -7,7 +7,7 @@ import com.carero.dto.ResultPaging;
 import com.carero.dto.recruit.RecruitReadDto;
 import com.carero.dto.recruit.RecruitCreateUpdateDto;
 import com.carero.dto.recruit.RecruitCUDResponseDto;
-import com.carero.dto.recruit.SubCategoryCreateDto;
+import com.carero.dto.SubCategoryCreateDto;
 import com.carero.service.RecruitService;
 import com.carero.service.SubCatService;
 import com.carero.service.UserService;
@@ -27,6 +27,13 @@ public class RecruitApiController {
     private final UserService userService;
     private final SubCatService subCatService;
 
+    @GetMapping("/recruits/{id}")
+    public RecruitReadDto readRecruit(
+            @PathVariable("id") Long id
+    ){
+        Recruit recruit = recruitService.findOne(id);
+        return new RecruitReadDto(recruit);
+    }
 
     @GetMapping("/recruits")
     public ResultPaging<RecruitReadDto> readRecruits(
@@ -52,7 +59,7 @@ public class RecruitApiController {
                 .map(o -> subCatService.findOne(o.getId()))
                 .collect(Collectors.toList());
 
-        Recruit recruit = recruitCreateUpdateDto.toEntity(user,subCats);
+        Recruit recruit = recruitCreateUpdateDto.createRecruit(user,subCats);
         recruitService.update(id, recruit);
 
         return new RecruitCUDResponseDto(id);
@@ -78,7 +85,7 @@ public class RecruitApiController {
                 .map(o -> subCatService.findOne(o.getId()))
                 .collect(Collectors.toList());
 
-        Recruit recruit = recruitCreateUpdateDto.toEntity(user,subCats);
+        Recruit recruit = recruitCreateUpdateDto.createRecruit(user,subCats);
         Long id = recruitService.create(recruit);
 
         return new ResponseEntity<>(new RecruitCUDResponseDto(id), HttpStatus.CREATED);

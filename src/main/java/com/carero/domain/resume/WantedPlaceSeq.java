@@ -25,4 +25,14 @@ public class WantedPlaceSeq {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resume_wanted_info_id")
     private ResumeWantedInfo resumeWantedInfo;
+
+    public void connectResumeWantedInfo(ResumeWantedInfo resumeWantedInfo){
+        this.resumeWantedInfo = resumeWantedInfo;
+    }
+    public WantedPlaceSeq(String city, String sigungu, String eupmyeondong, int seq) {
+        this.city = city;
+        this.sigungu = sigungu;
+        this.eupmyeondong = eupmyeondong;
+        this.seq = seq;
+    }
 }

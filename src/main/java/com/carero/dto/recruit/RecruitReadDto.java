@@ -4,16 +4,20 @@ import com.carero.domain.recruit.Recruit;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 public class RecruitReadDto {
     @NotEmpty
-    private Long userId;
+    private Long id;
 
     @NotEmpty
     private String title;
+
+    @NotEmpty
+    private String username;
 
     private String cat;
 
@@ -36,13 +40,24 @@ public class RecruitReadDto {
     @NotEmpty
     EtcInfoDto etcInfo;
 
+
+    private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
+    private Boolean status;
+    private int viewCount;
+
     public RecruitReadDto(Recruit recruit) {
-        this.userId = recruit.getId();
+        this.id = recruit.getId();
+        this.username = recruit.getUser().getUsername();
         this.title = recruit.getTitle();
         this.workInfo = new WorkInfoDto(recruit.getWorkInfo());
         this.targetInfo = new TargetInfoDto(recruit.getTargetInfo());
         this.wantedInfo = new WantedInfoDto(recruit.getWantedInfo());
         this.etcInfo = new EtcInfoDto(recruit.getEtcInfo());
+        this.createdDate = recruit.getCreatedDate();
+        this.modifiedDate = recruit.getModifiedDate();
+        this.status = recruit.getStatus();
+        this.viewCount = recruit.getViewCount();
 
         recruit.getCats().stream().forEach(c -> c.getSubCategory().getSubCategoryName());
 

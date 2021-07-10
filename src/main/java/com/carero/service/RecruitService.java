@@ -59,7 +59,7 @@ public class RecruitService {
     }
 
     public List<RecruitReadDto> findAllWithCats(int offset, int limit) {
-        List<Recruit> recruits = recruitRepository.findAllWithCats(offset, limit);
+        List<Recruit> recruits = recruitRepository.findAllWithPage(offset, limit);
 
         List<RecruitReadDto> result = recruits.stream()
                 .map(o -> new RecruitReadDto(o))

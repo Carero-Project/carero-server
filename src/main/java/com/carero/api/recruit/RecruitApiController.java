@@ -59,8 +59,8 @@ public class RecruitApiController {
                 .map(o -> subCatService.findOne(o.getId()))
                 .collect(Collectors.toList());
 
-        Recruit recruit = recruitCreateUpdateDto.createRecruit(user,subCats);
-        recruitService.update(id, recruit);
+        Recruit newRecruit = recruitCreateUpdateDto.createRecruit(user,subCats);
+        recruitService.update(id, newRecruit);
 
         return new RecruitCUDResponseDto(id);
     }

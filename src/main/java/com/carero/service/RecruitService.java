@@ -44,10 +44,12 @@ public class RecruitService {
 
     @Transactional
     public void update(Long id, Recruit newRecruit) {
+
         // userId 와 일치하는지 삽입 필요
         Recruit origin = recruitRepository.findOne(id);
         origin.changeInfo(newRecruit.getWorkInfo(), newRecruit.getTargetInfo(), newRecruit.getWantedInfo(), newRecruit.getEtcInfo());
         origin.changeTitle(newRecruit.getTitle());
+        origin.updateModifiedDate();
 
         // cats 테이블에 업데이트
         origin.getCats().clear();

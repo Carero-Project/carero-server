@@ -35,4 +35,8 @@ public class ResumeSubCat {
         this.resume = resume;
         this.subCategory = subCategory;
     }
+
+    public void connectRecruit(Resume resume) {
+        this.resume = resume;
+    }
 }

@@ -51,7 +51,7 @@ public class ResumeCreateDto {
         this.detailInfo = detailInfo;
     }
 
-    public Resume creteResume(User user, List<SubCategory> subCats) {
+    public Resume createResume(User user, List<SubCategory> subCats) {
         CertificationInfo certificationInfo = this.certificationInfo.toEntity();
 
         ResumeWantedInfo resumeWantedInfo = this.resumeWantedInfo.toEntity();

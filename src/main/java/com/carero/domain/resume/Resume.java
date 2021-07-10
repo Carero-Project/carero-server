@@ -1,6 +1,7 @@
 package com.carero.domain.resume;
 
 import com.carero.domain.cat.SubCategory;
+import com.carero.domain.recruit.RecruitSubCat;
 import com.carero.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,6 +65,23 @@ public class Resume {
     @Column(columnDefinition = "TEXT")
     private String detailInfo;
 
+    public void changeNation(String nation){
+        this.nation = nation;
+    }
+
+    public void changeIsParent(Boolean isParent){
+        this.isParent = isParent;
+    }
+
+    public void changeInfo(CertificationInfo certificationInfo, ResumeWantedInfo resumeWantedInfo, String educationInfo,
+                           String careerInfo, String detailInfo){
+        this.certificationInfo = certificationInfo;
+        this.resumeWantedInfo = resumeWantedInfo;
+        this.educationInfo = educationInfo;
+        this.careerInfo = careerInfo;
+        this.detailInfo = detailInfo;
+    }
+
     @Builder
     public Resume(User user, List<SubCategory> subCats, CertificationInfo certificationInfo, ResumeWantedInfo resumeWantedInfo,
                   String title, String nation, String educationInfo, String careerInfo, Boolean isParent, String contactTime, String detailInfo) {
@@ -91,5 +109,21 @@ public class Resume {
             this.subCats.add(resumeSubCat);
         }
 
+    }
+
+    public void changeTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateModifiedDate(){
+        this.modifiedDate = LocalDateTime.now();
+    }
+    public void changeContactTime(String contactTime) {
+        this.contactTime = contactTime;
+    }
+
+    public void addCat(ResumeSubCat subCat){
+        this.getSubCats().add(subCat);
+        subCat.connectRecruit(this);
     }
 }

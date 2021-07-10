@@ -12,9 +12,7 @@ import com.carero.service.ResumeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,6 +26,32 @@ public class ResumeApiController {
     private final ResumeService resumeService;
     private final SubCatService subCatService;
 
+
+    @PutMapping("/resumes/{id}")
+    public ResumeCUDResponseDto updateResume(
+            @PathVariable("id") Long id,
+            @RequestBody ResumeCreateDto resumeCreateDto){
+
+        User user = userService.findOne(id);
+
+        List<SubCategory> subCats = getSubCategories(resumeCreateDto);
+
+        Resume newResume = resumeCreateDto.createResume(user, subCats);
+        resumeService.update(id, newResume);
+
+        return new ResumeCUDResponseDto(id);
+
+    }
+
+    @DeleteMapping("/resumes/{id}")
+    public ResponseEntity<ResumeCUDResponseDto> deleteResume(
+            @PathVariable("id") Long id){
+        resumeService.deleteById(id);
+
+        return new ResponseEntity<>(new ResumeCUDResponseDto(id), HttpStatus.OK);
+    }
+
+
     @PostMapping("/resumes")
     public ResponseEntity<ResumeCUDResponseDto> createResume(@RequestBody ResumeCreateDto resumeCreateDto){
         User user = userService.findOne(resumeCreateDto.getUserId());
@@ -35,15 +59,20 @@ public class ResumeApiController {
             throw new IllegalStateException("해당 이름의 유저는 없습니다.");
         }
 
+        List<SubCategory> subCats = getSubCategories(resumeCreateDto);
+
+        Resume resume = resumeCreateDto.createResume(user, subCats);
+        Long id = resumeService.create(resume);
+
+        return new ResponseEntity<>(new ResumeCUDResponseDto(id), HttpStatus.CREATED);
+    }
+
+    private List<SubCategory> getSubCategories(ResumeCreateDto resumeCreateDto) {
         List<SubCategoryCreateDto> catIds = resumeCreateDto.getCats();
         List<SubCategory> subCats = catIds.stream()
                 .map(o -> subCatService.findOne(o.getId()))
                 .collect(Collectors.toList());
-
-        Resume resume = resumeCreateDto.creteResume(user, subCats);
-        Long id = resumeService.create(resume);
-
-        return new ResponseEntity<>(new ResumeCUDResponseDto(id), HttpStatus.CREATED);
+        return subCats;
     }
 
 }

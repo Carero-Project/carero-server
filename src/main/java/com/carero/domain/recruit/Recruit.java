@@ -65,7 +65,10 @@ public class Recruit {
         this.targetInfo = targetInfo;
         this.wantedInfo = wantedInfo;
         this.etcInfo = etcInfo;
-        modifiedDate = LocalDateTime.now();
+    }
+
+    public void updateModifiedDate(){
+        this.modifiedDate = LocalDateTime.now();
     }
 
 

@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ResultPaging<T> {
-    private int totalCount;
+    private long totalCount;
     private int page;
     private T data;
 }

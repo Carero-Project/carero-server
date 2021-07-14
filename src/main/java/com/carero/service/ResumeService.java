@@ -5,14 +5,19 @@ import com.carero.domain.recruit.RecruitSubCat;
 import com.carero.domain.resume.Resume;
 import com.carero.domain.resume.ResumeSubCat;
 import com.carero.domain.user.User;
+import com.carero.dto.resume.ResumeReadDto;
 import com.carero.repository.ResumeRepository;
 import com.carero.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -59,5 +64,20 @@ public class ResumeService {
     public Resume findById(Long id) {
 
         return resumeRepository.findById(id).orElseThrow(IllegalStateException::new);
+    }
+
+    public List<ResumeReadDto> findByPage(int offset, int limit) {
+        Pageable pageable = PageRequest.of(offset, limit);
+        List<Resume> resumes = resumeRepository.findByPage(pageable);
+
+        List<ResumeReadDto> resumeDtos = resumes.stream()
+                .map(r -> new ResumeReadDto(r))
+                .collect(Collectors.toList());
+
+        return resumeDtos;
+    }
+
+    public long countAll() {
+        return resumeRepository.count();
     }
 }

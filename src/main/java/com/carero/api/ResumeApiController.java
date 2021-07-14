@@ -4,6 +4,7 @@ import com.carero.domain.cat.SubCategory;
 import com.carero.domain.recruit.Recruit;
 import com.carero.domain.resume.Resume;
 import com.carero.domain.user.User;
+import com.carero.dto.ResultPaging;
 import com.carero.dto.SubCategoryCreateDto;
 import com.carero.dto.recruit.RecruitReadDto;
 import com.carero.dto.resume.ResumeCUDResponseDto;
@@ -27,6 +28,17 @@ public class ResumeApiController {
     private final UserService userService;
     private final ResumeService resumeService;
     private final SubCatService subCatService;
+
+
+    @GetMapping("/resumes")
+    public ResultPaging<ResumeReadDto> readResumes(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "8") int limit
+    ){
+        List<ResumeReadDto> resumes = resumeService.findByPage(page, limit);
+        long count = resumeService.countAll();
+        return new ResultPaging(count, page, resumes);
+    }
 
     @GetMapping("/resumes/{id}")
     public ResumeReadDto readResume(

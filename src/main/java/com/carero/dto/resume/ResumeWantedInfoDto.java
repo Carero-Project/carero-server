@@ -44,6 +44,19 @@ public class ResumeWantedInfoDto {
         this.wantedWageType = wantedWageType;
     }
 
+    public ResumeWantedInfoDto(ResumeWantedInfo resumeWantedInfo) {
+        this.wantedPlaceSeqs = resumeWantedInfo.getWantedPlaceSeqs().stream()
+                .map(wps -> new WantedPlaceSeqDto(wps)).collect(Collectors.toList());
+        this.wantedWeek = resumeWantedInfo.getWantedWeek();
+        this.wantedStartDate = resumeWantedInfo.getWantedStartDate();
+        this.wantedWorkType = resumeWantedInfo.getWantedWorkType();
+        this.wantedDuration = resumeWantedInfo.getWantedDuration();
+        this.wantedStartHour = resumeWantedInfo.getWantedStartHour();
+        this.wantedEndHour = resumeWantedInfo.getWantedEndHour();
+        this.wantedWage = resumeWantedInfo.getWantedWage();
+        this.wantedWageType = resumeWantedInfo.getWantedWageType();
+    }
+
     public ResumeWantedInfo toEntity(){
         List<WantedPlaceSeq> wantedPlaceSeqs = this.wantedPlaceSeqs
                 .stream()

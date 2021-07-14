@@ -1,4 +1,4 @@
-package com.carero.api.recruit;
+package com.carero.api;
 
 import com.carero.domain.cat.SubCategory;
 import com.carero.domain.recruit.Recruit;
@@ -40,7 +40,7 @@ public class RecruitApiController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "limit", defaultValue = "8") int limit
     ){
-        List<RecruitReadDto> recruits = recruitService.findAllWithCats(page*8, limit);
+        List<RecruitReadDto> recruits = recruitService.findAllPageWithCats(page*8, limit);
         int count = recruitService.countAll();
 
         return new ResultPaging(count, page, recruits);

@@ -1,5 +1,6 @@
 package com.carero.service;
 
+import com.carero.domain.recruit.Recruit;
 import com.carero.domain.recruit.RecruitSubCat;
 import com.carero.domain.resume.Resume;
 import com.carero.domain.resume.ResumeSubCat;
@@ -53,5 +54,10 @@ public class ResumeService {
         }
 
 
+    }
+
+    public Resume findById(Long id) {
+
+        return resumeRepository.findById(id).orElseThrow(IllegalStateException::new);
     }
 }

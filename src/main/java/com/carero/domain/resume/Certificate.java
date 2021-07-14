@@ -1,6 +1,7 @@
 package com.carero.domain.resume;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class Certificate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

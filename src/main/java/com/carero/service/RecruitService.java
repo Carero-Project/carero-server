@@ -52,15 +52,15 @@ public class RecruitService {
         origin.updateModifiedDate();
 
         // cats 테이블에 업데이트
-        origin.getCats().clear();
-        List<RecruitSubCat> cats = newRecruit.getCats();
+        origin.getSubCats().clear();
+        List<RecruitSubCat> cats = newRecruit.getSubCats();
         for (RecruitSubCat cat: cats) {
             origin.addCat(cat);
         }
 
     }
 
-    public List<RecruitReadDto> findAllWithCats(int offset, int limit) {
+    public List<RecruitReadDto> findAllPageWithCats(int offset, int limit) {
         List<Recruit> recruits = recruitRepository.findAllWithPage(offset, limit);
 
         List<RecruitReadDto> result = recruits.stream()

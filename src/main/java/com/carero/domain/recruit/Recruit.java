@@ -1,6 +1,5 @@
 package com.carero.domain.recruit;
 
-import com.carero.domain.Gender;
 import com.carero.domain.cat.SubCategory;
 import com.carero.domain.user.User;
 import lombok.Builder;
@@ -26,7 +25,7 @@ public class Recruit {
     private User user;
 
     @OneToMany(mappedBy = "recruit", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecruitSubCat> cats = new ArrayList<>();
+    private List<RecruitSubCat> subCats = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL ,orphanRemoval = true)
     @JoinColumn(name = "work_info_id")
@@ -77,7 +76,7 @@ public class Recruit {
     }
 
     public void addCat(RecruitSubCat subCat){
-        this.getCats().add(subCat);
+        this.getSubCats().add(subCat);
         subCat.connectRecruit(this);
     }
 
@@ -101,7 +100,7 @@ public class Recruit {
                     .subCategory(subcat)
                     .build();
 
-            cats.add(recruitSubCat);
+            this.subCats.add(recruitSubCat);
         }
     }
 

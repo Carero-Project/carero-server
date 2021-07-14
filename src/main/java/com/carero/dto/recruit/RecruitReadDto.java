@@ -59,12 +59,12 @@ public class RecruitReadDto {
         this.status = recruit.getStatus();
         this.viewCount = recruit.getViewCount();
 
-        recruit.getCats().stream().forEach(c -> c.getSubCategory().getSubCategoryName());
+        recruit.getSubCats().stream().forEach(c -> c.getSubCategory().getSubCategoryName());
 
-        String catName = recruit.getCats().get(0).getSubCategory().getParentCategory().getCategoryName();
-        this.cat = catName;
 
-        recruit.getCats().stream().forEach(c -> subCats.add(c.getSubCategory().getSubCategoryName()));
+        this.cat = recruit.getSubCats().get(0).getSubCategory().getParentCategory().getCategoryName();
+
+        recruit.getSubCats().stream().forEach(c -> subCats.add(c.getSubCategory().getSubCategoryName()));
 
     }
 }

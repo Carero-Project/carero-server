@@ -12,6 +12,7 @@ public class WantedPlaceSeqDto {
     private String sigungu;
     private String eupmyeondong;
 
+
     public WantedPlaceSeqDto(int seq, String city, String sigungu, String eupmyeondong) {
         this.seq = seq;
         this.city = city;
@@ -19,4 +20,10 @@ public class WantedPlaceSeqDto {
         this.eupmyeondong = eupmyeondong;
     }
 
+    public WantedPlaceSeqDto(WantedPlaceSeq wantedPlaceSeq) {
+        this.seq = wantedPlaceSeq.getSeq();
+        this.city = wantedPlaceSeq.getCity();
+        this.sigungu = wantedPlaceSeq.getSigungu();
+        this.eupmyeondong = wantedPlaceSeq.getEupmyeondong();
+    }
 }

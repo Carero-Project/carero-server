@@ -25,6 +25,14 @@ public class CertificationInfoDto {
     @NotEmpty
     private Boolean haveCrimeCert;
 
+    public CertificationInfoDto(CertificationInfo certificationInfo){
+        this.certificates = certificationInfo.getCertificates().stream()
+                .map(certificate -> new CertificateDto(certificate)).collect(Collectors.toList());
+        this.agreeCctv = certificationInfo.getAgreeCctv();
+        this.isInsurance = certificationInfo.getIsInsurance();
+        this.haveCrimeCert = certificationInfo.getHaveCrimeCert();
+
+    }
 
     @Builder
     public CertificationInfoDto(List<CertificateDto> certificates, @NotEmpty Boolean agreeCctv, @NotEmpty Boolean isInsurance, @NotEmpty Boolean haveCertificate, @NotEmpty Boolean haveCrimeCert) {

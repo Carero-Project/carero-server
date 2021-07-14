@@ -1,11 +1,14 @@
-package com.carero.api.recruit;
+package com.carero.api;
 
 import com.carero.domain.cat.SubCategory;
+import com.carero.domain.recruit.Recruit;
 import com.carero.domain.resume.Resume;
 import com.carero.domain.user.User;
 import com.carero.dto.SubCategoryCreateDto;
+import com.carero.dto.recruit.RecruitReadDto;
 import com.carero.dto.resume.ResumeCUDResponseDto;
 import com.carero.dto.resume.ResumeCreateDto;
+import com.carero.dto.resume.ResumeReadDto;
 import com.carero.service.SubCatService;
 import com.carero.service.UserService;
 import com.carero.service.ResumeService;
@@ -21,11 +24,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ResumeApiController {
 
-//    private final ResumeService resumeService;
     private final UserService userService;
     private final ResumeService resumeService;
     private final SubCatService subCatService;
 
+    @GetMapping("/resumes/{id}")
+    public ResumeReadDto readResume(
+            @PathVariable("id") Long id
+    ){
+        Resume resume = resumeService.findById(id);
+        return new ResumeReadDto(resume);
+    }
 
     @PutMapping("/resumes/{id}")
     public ResumeCUDResponseDto updateResume(

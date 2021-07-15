@@ -27,8 +27,6 @@ public class ResumeWantedInfo {
     private LocalDate wantedStartDate;
     private String wantedWorkType;
     private String wantedDuration;
-    private LocalTime wantedStartHour;
-    private LocalTime wantedEndHour;
     private String wantedWage;
 
     @Column(length = 2)
@@ -36,14 +34,11 @@ public class ResumeWantedInfo {
 
     @Builder
     public ResumeWantedInfo(List<WantedPlaceSeq> wantedPlaceSeqs, String wantedWeek, LocalDate wantedStartDate,
-                            String wantedWorkType, String wantedDuration, LocalTime wantedStartHour, LocalTime wantedEndHour,
-                            String wantedWage, String wantedWageType) {
+                            String wantedWorkType, String wantedDuration, String wantedWage, String wantedWageType) {
         this.wantedWeek = wantedWeek;
         this.wantedStartDate = wantedStartDate;
         this.wantedWorkType = wantedWorkType;
         this.wantedDuration = wantedDuration;
-        this.wantedStartHour = wantedStartHour;
-        this.wantedEndHour = wantedEndHour;
         this.wantedWage = wantedWage;
         this.wantedWageType = wantedWageType;
         this.wantedPlaceSeqs = wantedPlaceSeqs;

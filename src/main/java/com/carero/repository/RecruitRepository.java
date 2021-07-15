@@ -44,9 +44,6 @@ public class RecruitRepository {
                 "select r from Recruit r" +
                         " join fetch r.user u" +
                         " join fetch r.workInfo wi" +
-                        " join fetch r.targetInfo ti" +
-                        " join fetch r.wantedInfo wti" +
-                        " join fetch r.etcInfo ei" +
                         " order by r.id desc", Recruit.class)
                 .setFirstResult(offset)
                 .setMaxResults(limit)

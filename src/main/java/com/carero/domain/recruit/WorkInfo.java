@@ -24,44 +24,34 @@ public class WorkInfo {
     @Column(nullable = false)
     private String sigungu;
 
-    @Column(nullable = false)
-    private String eupmyeondong;
-
     private String workWeek;
     private String workType;
     private LocalDate workStartDate;
     private String workTermDate;
-    private LocalTime workingStartHour;
-    private LocalTime workingEndHour;
+    private String wageType;
     private String wage;
 
     @Column(nullable = false)
     private Boolean isCctv;
 
     private String familyInfo;
-    private String petInfo;
 
     @Column(columnDefinition = "TEXT")
     private String mainInfo;
 
     @Builder
-    public WorkInfo(String city, String sigungu, String eupmyeondong, String workWeek, String workType,
-                    LocalDate workStartDate, String workTermDate, LocalTime workingStartHour,
-                    LocalTime workingEndHour, String wage, Boolean isCctv, String familyInfo,
-                    String petInfo, String mainInfo) {
+    public WorkInfo(String city, String sigungu, String workWeek, String workType, String wageType,
+                    LocalDate workStartDate, String workTermDate, String wage, Boolean isCctv, String familyInfo, String mainInfo) {
         this.city = city;
         this.sigungu = sigungu;
-        this.eupmyeondong = eupmyeondong;
         this.workWeek = workWeek;
         this.workType = workType;
         this.workStartDate = workStartDate;
         this.workTermDate = workTermDate;
-        this.workingStartHour = workingStartHour;
-        this.workingEndHour = workingEndHour;
+        this.wageType = wageType;
         this.wage = wage;
         this.isCctv = isCctv;
         this.familyInfo = familyInfo;
-        this.petInfo = petInfo;
         this.mainInfo = mainInfo;
     }
 }

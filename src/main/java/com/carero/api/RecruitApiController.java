@@ -4,6 +4,7 @@ import com.carero.domain.cat.SubCategory;
 import com.carero.domain.recruit.Recruit;
 import com.carero.domain.user.User;
 import com.carero.dto.ResultPaging;
+import com.carero.dto.recruit.RecruitPageDto;
 import com.carero.dto.recruit.RecruitReadDto;
 import com.carero.dto.recruit.RecruitCreateUpdateDto;
 import com.carero.dto.recruit.RecruitCUDResponseDto;
@@ -36,11 +37,11 @@ public class RecruitApiController {
     }
 
     @GetMapping("/recruits")
-    public ResultPaging<RecruitReadDto> readRecruits(
+    public ResultPaging<RecruitPageDto> readRecruits(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "limit", defaultValue = "8") int limit
     ){
-        List<RecruitReadDto> recruits = recruitService.findByPage(page*8, limit);
+        List<RecruitPageDto> recruits = recruitService.findByPage(page*8, limit);
         int count = recruitService.countAll();
 
         return new ResultPaging(count, page, recruits);

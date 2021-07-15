@@ -22,24 +22,17 @@ public class ResumeWantedInfoDto {
     private LocalDate wantedStartDate;
     private String wantedWorkType;
     private String wantedDuration;
-    @DateTimeFormat(pattern = "HH:mm:ss")
-    private LocalTime wantedStartHour;
-    @DateTimeFormat(pattern = "HH:mm:ss")
-    private LocalTime wantedEndHour;
     private String wantedWage;
     private String wantedWageType;
 
     @Builder
     public ResumeWantedInfoDto(List<WantedPlaceSeqDto> wantedPlaceSeqs, String wantedWeek,
-                               LocalDate wantedStartDate, String wantedWorkType, String wantedDuration, LocalTime wantedStartHour,
-                               LocalTime wantedEndHour, String wantedWage, String wantedWageType) {
+                               LocalDate wantedStartDate, String wantedWorkType, String wantedDuration,String wantedWage, String wantedWageType) {
         this.wantedPlaceSeqs = wantedPlaceSeqs;
         this.wantedWeek = wantedWeek;
         this.wantedStartDate = wantedStartDate;
         this.wantedWorkType = wantedWorkType;
         this.wantedDuration = wantedDuration;
-        this.wantedStartHour = wantedStartHour;
-        this.wantedEndHour = wantedEndHour;
         this.wantedWage = wantedWage;
         this.wantedWageType = wantedWageType;
     }
@@ -51,8 +44,6 @@ public class ResumeWantedInfoDto {
         this.wantedStartDate = resumeWantedInfo.getWantedStartDate();
         this.wantedWorkType = resumeWantedInfo.getWantedWorkType();
         this.wantedDuration = resumeWantedInfo.getWantedDuration();
-        this.wantedStartHour = resumeWantedInfo.getWantedStartHour();
-        this.wantedEndHour = resumeWantedInfo.getWantedEndHour();
         this.wantedWage = resumeWantedInfo.getWantedWage();
         this.wantedWageType = resumeWantedInfo.getWantedWageType();
     }
@@ -69,8 +60,6 @@ public class ResumeWantedInfoDto {
                 .wantedStartDate(wantedStartDate)
                 .wantedWorkType(wantedWorkType)
                 .wantedDuration(wantedDuration)
-                .wantedStartHour(wantedStartHour)
-                .wantedEndHour(wantedEndHour)
                 .wantedWage(wantedWage)
                 .wantedWageType(wantedWageType)
                 .build();

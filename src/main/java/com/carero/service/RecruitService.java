@@ -2,6 +2,7 @@ package com.carero.service;
 
 import com.carero.domain.recruit.Recruit;
 import com.carero.domain.recruit.RecruitSubCat;
+import com.carero.dto.recruit.RecruitPageDto;
 import com.carero.dto.recruit.RecruitReadDto;
 import com.carero.repository.RecruitRepository;
 import lombok.RequiredArgsConstructor;
@@ -60,11 +61,11 @@ public class RecruitService {
 
     }
 
-    public List<RecruitReadDto> findByPage(int offset, int limit) {
+    public List<RecruitPageDto> findByPage(int offset, int limit) {
         List<Recruit> recruits = recruitRepository.findByPage(offset, limit);
 
-        List<RecruitReadDto> result = recruits.stream()
-                .map(o -> new RecruitReadDto(o))
+        List<RecruitPageDto> result = recruits.stream()
+                .map(o -> new RecruitPageDto(o))
                 .collect(Collectors.toList());
 
 

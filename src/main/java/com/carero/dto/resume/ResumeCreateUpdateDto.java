@@ -14,7 +14,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class ResumeCreateDto {
+public class ResumeCreateUpdateDto {
 
 
     @NotEmpty
@@ -35,9 +35,9 @@ public class ResumeCreateDto {
     private String contactTime;
     private String detailInfo;
 
-    public ResumeCreateDto(@NotEmpty Long userId, @NotEmpty List<SubCategoryCreateDto> subCats, @NotEmpty CertificationInfoDto certificationInfo,
-                           @NotEmpty ResumeWantedInfoDto resumeWantedInfo, @NotEmpty String title, @NotEmpty String nation,
-                           String educationInfo, String careerInfo, Boolean isParent, String contactTime, String detailInfo) {
+    public ResumeCreateUpdateDto(@NotEmpty Long userId, @NotEmpty List<SubCategoryCreateDto> subCats, @NotEmpty CertificationInfoDto certificationInfo,
+                                 @NotEmpty ResumeWantedInfoDto resumeWantedInfo, @NotEmpty String title, @NotEmpty String nation,
+                                 String educationInfo, String careerInfo, Boolean isParent, String contactTime, String detailInfo) {
         this.userId = userId;
         this.cats = subCats;
         this.certificationInfo = certificationInfo;

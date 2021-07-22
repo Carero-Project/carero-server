@@ -5,6 +5,7 @@ import com.carero.domain.recruit.RecruitSubCat;
 import com.carero.domain.resume.Resume;
 import com.carero.domain.resume.ResumeSubCat;
 import com.carero.domain.user.User;
+import com.carero.dto.resume.ResumePageDto;
 import com.carero.dto.resume.ResumeReadDto;
 import com.carero.repository.ResumeRepository;
 import com.carero.repository.UserRepository;
@@ -66,12 +67,12 @@ public class ResumeService {
         return resumeRepository.findById(id).orElseThrow(IllegalStateException::new);
     }
 
-    public List<ResumeReadDto> findByPage(int offset, int limit) {
+    public List<ResumePageDto> findByPage(int offset, int limit) {
         Pageable pageable = PageRequest.of(offset, limit);
         List<Resume> resumes = resumeRepository.findByPage(pageable);
 
-        List<ResumeReadDto> resumeDtos = resumes.stream()
-                .map(r -> new ResumeReadDto(r))
+        List<ResumePageDto> resumeDtos = resumes.stream()
+                .map(r -> new ResumePageDto(r))
                 .collect(Collectors.toList());
 
         return resumeDtos;

@@ -18,8 +18,6 @@ public class WantedPlaceSeq {
     @Column(nullable = false)
     private String sigungu;
     @Column(nullable = false)
-    private String eupmyeondong;
-    @Column(nullable = false)
     private int seq;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -29,10 +27,9 @@ public class WantedPlaceSeq {
     public void connectResumeWantedInfo(ResumeWantedInfo resumeWantedInfo){
         this.resumeWantedInfo = resumeWantedInfo;
     }
-    public WantedPlaceSeq(String city, String sigungu, String eupmyeondong, int seq) {
+    public WantedPlaceSeq(String city, String sigungu, int seq) {
         this.city = city;
         this.sigungu = sigungu;
-        this.eupmyeondong = eupmyeondong;
         this.seq = seq;
     }
 }

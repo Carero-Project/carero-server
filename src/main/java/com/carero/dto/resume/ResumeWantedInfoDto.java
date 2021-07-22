@@ -51,7 +51,7 @@ public class ResumeWantedInfoDto {
     public ResumeWantedInfo toEntity(){
         List<WantedPlaceSeq> wantedPlaceSeqs = this.wantedPlaceSeqs
                 .stream()
-                .map(wps -> new WantedPlaceSeq(wps.getCity(),wps.getSigungu(), wps.getEupmyeondong(), wps.getSeq()))
+                .map(wps -> new WantedPlaceSeq(wps.getCity(),wps.getSigungu(), wps.getSeq()))
                 .collect(Collectors.toList());
 
         ResumeWantedInfo resumeWantedInfo = ResumeWantedInfo.builder()

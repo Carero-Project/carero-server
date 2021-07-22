@@ -28,6 +28,8 @@ public class WorkInfo {
     private String workType;
     private LocalDate workStartDate;
     private String workTermDate;
+
+    @Column(length = 2)
     private String wageType;
     private String wage;
 

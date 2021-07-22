@@ -10,20 +10,17 @@ public class WantedPlaceSeqDto {
     private int seq;
     private String city;
     private String sigungu;
-    private String eupmyeondong;
 
 
-    public WantedPlaceSeqDto(int seq, String city, String sigungu, String eupmyeondong) {
+    public WantedPlaceSeqDto(int seq, String city, String sigungu) {
         this.seq = seq;
         this.city = city;
         this.sigungu = sigungu;
-        this.eupmyeondong = eupmyeondong;
     }
 
     public WantedPlaceSeqDto(WantedPlaceSeq wantedPlaceSeq) {
         this.seq = wantedPlaceSeq.getSeq();
         this.city = wantedPlaceSeq.getCity();
         this.sigungu = wantedPlaceSeq.getSigungu();
-        this.eupmyeondong = wantedPlaceSeq.getEupmyeondong();
     }
 }

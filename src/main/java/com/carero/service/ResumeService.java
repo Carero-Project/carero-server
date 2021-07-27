@@ -63,8 +63,7 @@ public class ResumeService {
     }
 
     public Resume findById(Long id) {
-
-        return resumeRepository.findById(id).orElseThrow(IllegalStateException::new);
+        return resumeRepository.findById(id).orElseThrow(() -> new IllegalStateException("해당 Id의 Resume이 없습니다."));
     }
 
     public List<ResumePageDto> findByPage(int offset, int limit) {

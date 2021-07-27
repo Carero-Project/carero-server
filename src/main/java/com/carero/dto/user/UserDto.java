@@ -35,4 +35,20 @@ public class UserDto {
     @NonNull
     private String sigungu;
 
+    public User toEntity(){
+
+        User user = User.builder()
+                .username(this.username)
+                .nickname(this.nickname)
+                .password(this.password)
+                .age(this.age)
+                .email(this.email)
+                .gender(this.gender)
+                .tel(this.tel)
+                .city(this.city)
+                .sigungu(this.sigungu)
+                .build();
+
+        return user;
+    }
 }

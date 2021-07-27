@@ -61,4 +61,8 @@ public class User {
         this.sigungu = sigungu;
         this.joinedDate = LocalDateTime.now();
     }
+
+    public void setEncodedPassword(String encodedPassword){
+        this.password = encodedPassword;
+    }
 }

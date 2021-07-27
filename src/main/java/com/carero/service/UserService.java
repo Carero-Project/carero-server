@@ -4,6 +4,7 @@ import com.carero.domain.user.User;
 import com.carero.dto.user.UserDto;
 import com.carero.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +17,14 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Long join(User user){
         validateDuplicateUser(user);
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+
+        user.setEncodedPassword(encodedPassword);
         userRepository.save(user);
         return user.getId();
     }

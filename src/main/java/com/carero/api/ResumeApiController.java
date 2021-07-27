@@ -59,7 +59,7 @@ public class ResumeApiController {
             @PathVariable("id") Long id,
             @RequestBody ResumeCreateUpdateDto resumeCreateUpdateDto){
 
-        User user = userService.findOne(id);
+        User user = userService.findById(id);
 
         List<SubCategory> subCats = getSubCategories(resumeCreateUpdateDto);
 
@@ -82,7 +82,7 @@ public class ResumeApiController {
     @ApiOperation(value = "이력서 작성", notes = "이력서를 작성한다.")
     @PostMapping
     public ResponseEntity<ResumeCUDResponseDto> createResume(@RequestBody ResumeCreateUpdateDto resumeCreateUpdateDto){
-        User user = userService.findOne(resumeCreateUpdateDto.getUserId());
+        User user = userService.findById(resumeCreateUpdateDto.getUserId());
         if(user == null){
             throw new IllegalStateException("해당 이름의 유저는 없습니다.");
         }

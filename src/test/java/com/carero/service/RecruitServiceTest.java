@@ -29,14 +29,14 @@ class RecruitServiceTest {
         //given
         User user = User.builder()
                 .password("12345")
-                .username("회원A")
+                .username("회원")
+                .nickname("recruit작성test")
                 .age(30)
                 .gender(Gender.MALE)
                 .email("kkkk@naver.com")
                 .tel("010-7666-6666")
                 .city("전라남도")
                 .sigungu("광주광역시")
-                .eupmyeondong("소소동")
                 .build();
 
         userService.join(user);

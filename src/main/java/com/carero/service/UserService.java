@@ -1,6 +1,7 @@
 package com.carero.service;
 
 import com.carero.domain.user.User;
+import com.carero.dto.user.UserDto;
 import com.carero.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,18 +26,21 @@ public class UserService {
 
     private void validateDuplicateUser(User user){
         // DB에 limit 제약조건 추가 필요
-        List<User> findUsers = userRepository.findByName(user.getUsername());
-        if(!findUsers.isEmpty()){
-            throw new IllegalStateException("이미 존재하는 회원입니다.");
+        User findUser = userRepository.findOneByUsername(user.getUsername()).orElse(null);
+
+        if(findUser != null){
+            throw new IllegalStateException("중복된 회원이름 입니다.");
         }
     }
 
-    public User findOne(Long userId){
-        return userRepository.findOne(userId);
+    public User findById(Long userId){
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalStateException("해당 회원은 존재하지 않습니다."));
     }
 
-    public List<User> findByName(String name){
-        return userRepository.findByName(name);
+    public User findOneByName(String username){
+        return userRepository.findOneByUsername(username)
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 username입니다."));
     }
     public List<User> findAll(){
         return userRepository.findAll();

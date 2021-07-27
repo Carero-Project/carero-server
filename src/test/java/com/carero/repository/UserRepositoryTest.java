@@ -32,18 +32,17 @@ class UserRepositoryTest {
         String tel = "010-8888-8888";
         String city = "전라남도";
         String sigungu = "광주광역시";
-        String eupmyeondong = "무슨동";
 
         userRepository.save(User.builder()
                 .password(pass)
                 .username(name)
+                .nickname("회원A")
                 .age(age)
                 .gender(gender)
                 .email(email)
                 .tel(tel)
                 .city(city)
                 .sigungu(sigungu)
-                .eupmyeondong(eupmyeondong)
                 .build());
 
         //when
@@ -59,11 +58,7 @@ class UserRepositoryTest {
         assertThat(user.getTel()).isEqualTo(tel);
         assertThat(user.getCity()).isEqualTo(city);
         assertThat(user.getSigungu()).isEqualTo(sigungu);
-        assertThat(user.getEupmyeondong()).isEqualTo(eupmyeondong);
         System.out.println("생성날짜: " + user.getJoinedDate());
-
-        LocalDateTime joinedDate = user.getJoinedDate();
-        Month month = joinedDate.getMonth();
     }
 
 }

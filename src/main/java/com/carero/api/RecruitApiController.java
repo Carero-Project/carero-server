@@ -61,7 +61,7 @@ public class RecruitApiController {
             @PathVariable("id") Long id
             ){
 
-        User user = userService.findOne(recruitCreateUpdateDto.getUserId());
+        User user = userService.findById(recruitCreateUpdateDto.getUserId());
 
         List<SubCategory> subCats = getSubCategories(recruitCreateUpdateDto);
 
@@ -83,7 +83,7 @@ public class RecruitApiController {
     @ApiOperation(value = "채용공고 작성", notes = "채용공고를 작성한다.")
     @PostMapping
     public ResponseEntity<RecruitCUDResponseDto> createRecruit(@RequestBody RecruitCreateUpdateDto recruitCreateUpdateDto){
-        User user = userService.findOne(recruitCreateUpdateDto.getUserId());
+        User user = userService.findById(recruitCreateUpdateDto.getUserId());
         if(user == null){
             throw new IllegalStateException("해당 이름의 유저는 없습니다.");
         }

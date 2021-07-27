@@ -4,7 +4,6 @@ import com.carero.domain.Gender;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -22,6 +21,9 @@ public class User {
 
     @Column(length = 15, nullable = false)
     private String username;
+
+    @Column(nullable = false)
+    private String nickname;
 
     @Column(nullable = false)
     private int age;
@@ -43,23 +45,20 @@ public class User {
     private String sigungu;
 
     @Column(nullable = false)
-    private String eupmyeondong;
-
-    @Column(nullable = false)
     private LocalDateTime joinedDate;
 
     @Builder
-    public User(String password, String username, int age, Gender gender,
-                String email, String tel, String city, String sigungu, String eupmyeondong){
+    public User(String password, String username,String nickname, int age, Gender gender,
+                String email, String tel, String city, String sigungu){
         this.password = password;
         this.username = username;
+        this.nickname = nickname;
         this.age = age;
         this.gender = gender;
         this.email = email;
         this.tel = tel;
         this.city = city;
         this.sigungu = sigungu;
-        this.eupmyeondong = eupmyeondong;
         this.joinedDate = LocalDateTime.now();
     }
 }

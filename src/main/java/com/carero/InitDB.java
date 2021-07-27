@@ -36,21 +36,21 @@ public class InitDB {
             int age = 30;
             Gender gender = Gender.MALE;
             String email = "kkkkk@naver.com";
+            String nickname = "회원A";
             String tel = "010-8888-8888";
             String city = "전라남도";
             String sigungu = "광주광역시";
-            String eupmyeondong = "무슨동";
 
             User user = User.builder()
                     .password(pass)
                     .username(name)
+                    .nickname(nickname)
                     .age(age)
                     .gender(gender)
                     .email(email)
                     .tel(tel)
                     .city(city)
                     .sigungu(sigungu)
-                    .eupmyeondong(eupmyeondong)
                     .build();
 
             em.persist(user);

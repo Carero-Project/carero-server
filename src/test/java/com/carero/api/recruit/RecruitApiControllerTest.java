@@ -5,6 +5,7 @@ import com.carero.domain.recruit.*;
 import com.carero.domain.user.User;
 import com.carero.dto.SubCategoryCreateDto;
 import com.carero.dto.recruit.*;
+import com.carero.dto.user.UserDto;
 import com.carero.service.RecruitService;
 import com.carero.service.UserService;
 import org.junit.jupiter.api.*;
@@ -56,28 +57,27 @@ class RecruitApiControllerTest {
     public void initDB() {
         String pass = "1234512312";
         String name = "test";
+        String nickname = "test1";
         int age = 30;
         Gender gender = Gender.MALE;
         String email = "kkkkk@naver.com";
         String tel = "010-7777-7777";
         String city = "전라남도";
         String sigungu = "test시";
-        String eupmyeondong = "무슨동";
 
         User user = User.builder()
                 .password(pass)
                 .username(name)
+                .nickname(nickname)
                 .age(age)
                 .gender(gender)
                 .email(email)
                 .tel(tel)
                 .city(city)
                 .sigungu(sigungu)
-                .eupmyeondong(eupmyeondong)
                 .build();
 
-        userService.join(user);
-        testUserId = user.getId();
+        testUserId = userService.join(user);
     }
 
     @Test
@@ -105,7 +105,7 @@ class RecruitApiControllerTest {
                 .workStartDate(LocalDate.now())
                 .workTermDate("6개월 이상")
                 .wageType("월급")
-                .wage(1500000)
+                .wage("1500000")
                 .isCctv(false)
                 .familyInfo("4인 가구")
                 .mainInfo("아이를 돌봐주실 분 구합니다.")

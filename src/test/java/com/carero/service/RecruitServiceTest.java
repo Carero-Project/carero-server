@@ -39,7 +39,7 @@ class RecruitServiceTest {
                 .sigungu("광주광역시")
                 .build();
 
-        userService.join(user);
+        userService.signup(user);
         SubCategory subCat1 = subCatRepository.findById(1L);
         SubCategory subCat2 = subCatRepository.findById(2L);
 

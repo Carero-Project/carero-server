@@ -1,4 +1,4 @@
-package com.carero.api.recruit;
+package com.carero.controller.recruit;
 
 import com.carero.domain.Gender;
 import com.carero.domain.recruit.*;
@@ -76,7 +76,7 @@ class RecruitApiControllerTest {
                 .sigungu(sigungu)
                 .build();
 
-        testUserId = userService.join(user);
+        testUserId = userService.signup(user);
     }
 
     @Test

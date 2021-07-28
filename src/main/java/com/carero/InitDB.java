@@ -4,6 +4,7 @@ import com.carero.domain.Gender;
 import com.carero.domain.cat.Category;
 import com.carero.domain.cat.SubCategory;
 import com.carero.domain.user.User;
+import com.carero.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ public class InitDB {
     @Transactional
     @RequiredArgsConstructor
     static class InitService {
+        private final UserService userService;
         private final EntityManager em;
 
         public void userInit(){
@@ -53,7 +55,7 @@ public class InitDB {
                     .sigungu(sigungu)
                     .build();
 
-            em.persist(user);
+            userService.signup(user);
 
         }
         public void catInit(){

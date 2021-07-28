@@ -43,7 +43,7 @@ class UserServiceTest {
                 .build();
 
         //when
-        Long userId = userService.join(user);
+        Long userId = userService.signup(user);
 
         //then
         Assertions.assertThat(user).isEqualTo(userService.findById(userId));
@@ -86,10 +86,10 @@ class UserServiceTest {
                 .sigungu(sigungu)
                 .build();
         //when
-        userService.join(userA);
+        userService.signup(userA);
         //then
         assertThrows(IllegalStateException.class, () ->{
-            userService.join(userB);
+            userService.signup(userB);
         });
     }
 

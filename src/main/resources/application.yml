@@ -20,5 +20,11 @@ server:
 
 logging:
   level:
+    com.carero: debug
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+
+jwt:
+  header: Authorization
+  secret: a2JzYXQtdGVjaC1zcHJpbmctYm9vdC1qd3QtdHV0b3JpYWwtc2VjcmV0LXR1dG9yaWFsLXNlY3JldC1zcHJpbmctc2RmYXNkLWZkYWZld3Itc2RmenhjdnhjenZ4Yy1iZmRnZXRyd3QK
+  token-validity-in-seconds: 3600

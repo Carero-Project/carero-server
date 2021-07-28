@@ -1,4 +1,4 @@
-package com.carero.api;
+package com.carero.controller;
 
 import com.carero.domain.cat.SubCategory;
 import com.carero.domain.resume.Resume;

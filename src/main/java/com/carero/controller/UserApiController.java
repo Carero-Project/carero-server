@@ -1,4 +1,4 @@
-package com.carero.api;
+package com.carero.controller;
 
 import com.carero.dto.user.UserDto;
 import com.carero.service.UserService;
@@ -19,6 +19,7 @@ public class UserApiController {
 
     @PostMapping("/signup")
     public ResponseEntity<Long> signup(@Valid @RequestBody UserDto userDto) {
-        return ResponseEntity.ok(userService.join(userDto.toEntity()));
+        return ResponseEntity.ok(userService.signup(userDto.toEntity()));
     }
+
 }

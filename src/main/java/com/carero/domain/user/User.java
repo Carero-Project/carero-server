@@ -1,6 +1,7 @@
 package com.carero.domain.user;
 
 import com.carero.domain.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,6 +48,16 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime joinedDate;
 
+    @JsonIgnore
+    @Column(name = "activated")
+    private boolean activated;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Authority authority;
+
+
+
     @Builder
     public User(String password, String username,String nickname, int age, Gender gender,
                 String email, String tel, String city, String sigungu){
@@ -60,6 +71,8 @@ public class User {
         this.city = city;
         this.sigungu = sigungu;
         this.joinedDate = LocalDateTime.now();
+        this.authority = Authority.ROLE_USER;
+        this.activated = true;
     }
 
     public void setEncodedPassword(String encodedPassword){

@@ -3,6 +3,7 @@ package com.carero.service;
 import com.carero.domain.user.User;
 import com.carero.dto.user.UserDto;
 import com.carero.repository.UserRepository;
+import com.carero.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public Long join(User user){
+    public Long signup(User user){
         validateDuplicateUser(user);
         String encodedPassword = passwordEncoder.encode(user.getPassword());
 
@@ -47,9 +48,16 @@ public class UserService {
         return userRepository.findOneByUsername(username)
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 username입니다."));
     }
+
+    // 현재 SecurityContext에 저장된 username의 정보만 가져온다.
+    public Optional<User> getMyUser(){
+        return SecurityUtils.getCurrentUsername().flatMap(userRepository::findOneByUsername);
+    }
+
     public List<User> findAll(){
         return userRepository.findAll();
     }
+
 
     @Transactional
     public void delete(Long userId) {

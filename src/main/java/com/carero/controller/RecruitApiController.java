@@ -1,4 +1,4 @@
-package com.carero.api;
+package com.carero.controller;
 
 import com.carero.domain.cat.SubCategory;
 import com.carero.domain.recruit.Recruit;
@@ -18,6 +18,7 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,6 +56,7 @@ public class RecruitApiController {
     }
 
     @ApiOperation(value = "채용공고 수정", notes = "채용공고를 수정한다.")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @PutMapping("/{id}")
     public RecruitCUDResponseDto updateRecruit(
             @RequestBody RecruitCUDRequestDto recruitCUDRequestDto,
@@ -72,6 +74,7 @@ public class RecruitApiController {
     }
 
     @ApiOperation(value = "채용공고 삭제", notes = "채용공고를 삭제한다.")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<RecruitCUDResponseDto> deleteRecruit(
             @PathVariable("id") Long id){
@@ -81,6 +84,7 @@ public class RecruitApiController {
     }
 
     @ApiOperation(value = "채용공고 작성", notes = "채용공고를 작성한다.")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     @PostMapping
     public ResponseEntity<RecruitCUDResponseDto> createRecruit(@RequestBody RecruitCUDRequestDto recruitCUDRequestDto){
         User user = userService.findById(recruitCUDRequestDto.getUserId());

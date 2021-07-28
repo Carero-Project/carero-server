@@ -6,7 +6,7 @@ import com.carero.domain.user.User;
 import com.carero.dto.ResultPaging;
 import com.carero.dto.SubCategoryCreateDto;
 import com.carero.dto.resume.ResumeCUDResponseDto;
-import com.carero.dto.resume.ResumeCreateUpdateDto;
+import com.carero.dto.resume.ResumeCUDRequestDto;
 import com.carero.dto.resume.ResumePageDto;
 import com.carero.dto.resume.ResumeReadDto;
 import com.carero.service.SubCatService;
@@ -57,13 +57,13 @@ public class ResumeApiController {
     @PutMapping("/{id}")
     public ResumeCUDResponseDto updateResume(
             @PathVariable("id") Long id,
-            @RequestBody ResumeCreateUpdateDto resumeCreateUpdateDto){
+            @RequestBody ResumeCUDRequestDto resumeCUDRequestDto){
 
         User user = userService.findById(id);
 
-        List<SubCategory> subCats = getSubCategories(resumeCreateUpdateDto);
+        List<SubCategory> subCats = getSubCategories(resumeCUDRequestDto);
 
-        Resume newResume = resumeCreateUpdateDto.createResume(user, subCats);
+        Resume newResume = resumeCUDRequestDto.createResume(user, subCats);
         resumeService.update(id, newResume);
 
         return new ResumeCUDResponseDto(id);
@@ -81,22 +81,22 @@ public class ResumeApiController {
 
     @ApiOperation(value = "이력서 작성", notes = "이력서를 작성한다.")
     @PostMapping
-    public ResponseEntity<ResumeCUDResponseDto> createResume(@RequestBody ResumeCreateUpdateDto resumeCreateUpdateDto){
-        User user = userService.findById(resumeCreateUpdateDto.getUserId());
+    public ResponseEntity<ResumeCUDResponseDto> createResume(@RequestBody ResumeCUDRequestDto resumeCUDRequestDto){
+        User user = userService.findById(resumeCUDRequestDto.getUserId());
         if(user == null){
             throw new IllegalStateException("해당 이름의 유저는 없습니다.");
         }
 
-        List<SubCategory> subCats = getSubCategories(resumeCreateUpdateDto);
+        List<SubCategory> subCats = getSubCategories(resumeCUDRequestDto);
 
-        Resume resume = resumeCreateUpdateDto.createResume(user, subCats);
+        Resume resume = resumeCUDRequestDto.createResume(user, subCats);
         Long id = resumeService.create(resume);
 
         return new ResponseEntity<>(new ResumeCUDResponseDto(id), HttpStatus.CREATED);
     }
 
-    private List<SubCategory> getSubCategories(ResumeCreateUpdateDto resumeCreateUpdateDto) {
-        List<SubCategoryCreateDto> catIds = resumeCreateUpdateDto.getCats();
+    private List<SubCategory> getSubCategories(ResumeCUDRequestDto resumeCUDRequestDto) {
+        List<SubCategoryCreateDto> catIds = resumeCUDRequestDto.getCats();
         List<SubCategory> subCats = catIds.stream()
                 .map(o -> subCatService.findOne(o.getId()))
                 .collect(Collectors.toList());

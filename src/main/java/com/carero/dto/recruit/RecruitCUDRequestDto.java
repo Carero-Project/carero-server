@@ -11,8 +11,8 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Data
-public class RecruitCreateUpdateDto {
-    public RecruitCreateUpdateDto() {
+public class RecruitCUDRequestDto {
+    public RecruitCUDRequestDto() {
     }
 
     @NotEmpty
@@ -41,10 +41,10 @@ public class RecruitCreateUpdateDto {
     EtcInfoDto etcInfo;
 
     @Builder
-    public RecruitCreateUpdateDto(@NotEmpty Long userId, @NotEmpty String title,
-                                  @NotEmpty List<SubCategoryCreateDto> cats, @NotEmpty WorkInfoDto workInfo,
-                                  @NotEmpty TargetInfoDto targetInfo, @NotEmpty WantedInfoDto wantedInfo,
-                                  @NotEmpty EtcInfoDto etcInfo) {
+    public RecruitCUDRequestDto(@NotEmpty Long userId, @NotEmpty String title,
+                                @NotEmpty List<SubCategoryCreateDto> cats, @NotEmpty WorkInfoDto workInfo,
+                                @NotEmpty TargetInfoDto targetInfo, @NotEmpty WantedInfoDto wantedInfo,
+                                @NotEmpty EtcInfoDto etcInfo) {
         this.userId = userId;
         this.title = title;
         this.cats = cats;

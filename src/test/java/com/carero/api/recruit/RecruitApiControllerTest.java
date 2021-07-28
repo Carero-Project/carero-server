@@ -5,7 +5,6 @@ import com.carero.domain.recruit.*;
 import com.carero.domain.user.User;
 import com.carero.dto.SubCategoryCreateDto;
 import com.carero.dto.recruit.*;
-import com.carero.dto.user.UserDto;
 import com.carero.service.RecruitService;
 import com.carero.service.UserService;
 import org.junit.jupiter.api.*;
@@ -125,7 +124,7 @@ class RecruitApiControllerTest {
         cats.add(new SubCategoryCreateDto(2L));
 
         String title = "케어하실분 구합니다.";
-        RecruitCreateUpdateDto recruitPostDto = RecruitCreateUpdateDto.builder()
+        RecruitCUDRequestDto recruitPostDto = RecruitCUDRequestDto.builder()
                 .title(title)
                 .userId(testUserId)
                 .cats(cats)

@@ -23,7 +23,7 @@ public class SwaggerConfiguration {
     @Bean
     public Docket swaggerApi() {
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(swaggerInfo()).select()
-                .apis(RequestHandlerSelectors.basePackage("com.carero.api"))
+                .apis(RequestHandlerSelectors.basePackage("com.carero.controller"))
                 .paths(PathSelectors.any())
                 .build()
                 .useDefaultResponseMessages(false); // 기본으로 세팅되는 200,401,403,404 메시지를 표시 하지 않음

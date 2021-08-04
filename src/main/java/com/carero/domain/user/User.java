@@ -20,7 +20,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(length = 15, nullable = false)
+    @Column(nullable = false)
     private String username;
 
     @Column(nullable = false)
@@ -32,9 +32,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;
-
-    @Column(nullable = false)
-    private String email;
 
     @Column(nullable = false)
     private String tel;
@@ -60,13 +57,12 @@ public class User {
 
     @Builder
     public User(String password, String username,String nickname, int age, Gender gender,
-                String email, String tel, String city, String sigungu){
+                String tel, String city, String sigungu){
         this.password = password;
         this.username = username;
         this.nickname = nickname;
         this.age = age;
         this.gender = gender;
-        this.email = email;
         this.tel = tel;
         this.city = city;
         this.sigungu = sigungu;

@@ -59,7 +59,6 @@ class RecruitApiControllerTest {
         String nickname = "test1";
         int age = 30;
         Gender gender = Gender.MALE;
-        String email = "kkkkk@naver.com";
         String tel = "010-7777-7777";
         String city = "전라남도";
         String sigungu = "test시";
@@ -70,7 +69,6 @@ class RecruitApiControllerTest {
                 .nickname(nickname)
                 .age(age)
                 .gender(gender)
-                .email(email)
                 .tel(tel)
                 .city(city)
                 .sigungu(sigungu)
@@ -126,7 +124,6 @@ class RecruitApiControllerTest {
         String title = "케어하실분 구합니다.";
         RecruitCUDRequestDto recruitPostDto = RecruitCUDRequestDto.builder()
                 .title(title)
-                .userId(testUserId)
                 .cats(cats)
                 .workInfo(workInfo)
                 .targetInfo(targetInfo)

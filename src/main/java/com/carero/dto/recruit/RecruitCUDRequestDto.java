@@ -16,9 +16,6 @@ public class RecruitCUDRequestDto {
     }
 
     @NotEmpty
-    private Long userId;
-
-    @NotEmpty
     private String title;
 
     @NotEmpty
@@ -41,11 +38,10 @@ public class RecruitCUDRequestDto {
     EtcInfoDto etcInfo;
 
     @Builder
-    public RecruitCUDRequestDto(@NotEmpty Long userId, @NotEmpty String title,
+    public RecruitCUDRequestDto(@NotEmpty String title,
                                 @NotEmpty List<SubCategoryCreateDto> cats, @NotEmpty WorkInfoDto workInfo,
                                 @NotEmpty TargetInfoDto targetInfo, @NotEmpty WantedInfoDto wantedInfo,
                                 @NotEmpty EtcInfoDto etcInfo) {
-        this.userId = userId;
         this.title = title;
         this.cats = cats;
         this.workInfo = workInfo;

@@ -1,23 +1,16 @@
 package com.carero.service;
 
-import com.carero.domain.recruit.Recruit;
-import com.carero.domain.recruit.RecruitSubCat;
 import com.carero.domain.resume.Resume;
 import com.carero.domain.resume.ResumeSubCat;
-import com.carero.domain.user.User;
 import com.carero.dto.resume.ResumePageDto;
-import com.carero.dto.resume.ResumeReadDto;
 import com.carero.repository.ResumeRepository;
-import com.carero.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,7 +56,7 @@ public class ResumeService {
     }
 
     public Resume findById(Long id) {
-        return resumeRepository.findById(id).orElseThrow(() -> new IllegalStateException("해당 Id의 Resume이 없습니다."));
+        return resumeRepository.findById(id).orElseThrow(() -> new IllegalStateException("해당 ID의 Resume이 없습니다."));
     }
 
     public List<ResumePageDto> findByPage(int offset, int limit) {

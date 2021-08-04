@@ -37,7 +37,6 @@ public class InitDB {
             String name = "회원A";
             int age = 30;
             Gender gender = Gender.MALE;
-            String email = "kkkkk@naver.com";
             String nickname = "회원A";
             String tel = "010-8888-8888";
             String city = "전라남도";
@@ -49,7 +48,6 @@ public class InitDB {
                     .nickname(nickname)
                     .age(age)
                     .gender(gender)
-                    .email(email)
                     .tel(tel)
                     .city(city)
                     .sigungu(sigungu)

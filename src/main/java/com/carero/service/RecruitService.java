@@ -3,9 +3,10 @@ package com.carero.service;
 import com.carero.domain.recruit.Recruit;
 import com.carero.domain.recruit.RecruitSubCat;
 import com.carero.dto.recruit.RecruitPageDto;
-import com.carero.dto.recruit.RecruitReadDto;
 import com.carero.repository.RecruitRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,8 +26,8 @@ public class RecruitService {
         return recruit.getId();
     }
 
-    public Recruit findOne(Long recruitId){
-        return recruitRepository.findOne(recruitId);
+    public Recruit findById(Long recruitId){
+        return recruitRepository.findById(recruitId).orElseThrow(()-> new IllegalStateException("해당 ID의 Recruit는 없습니다."));
     }
 
     public List<Recruit> findAll(){
@@ -47,7 +48,7 @@ public class RecruitService {
     public void update(Long id, Recruit newRecruit) {
 
         // userId 와 일치하는지 삽입 필요
-        Recruit origin = recruitRepository.findOne(id);
+        Recruit origin = recruitRepository.findById(id).orElseThrow(() -> new IllegalStateException("해당 ID의 Recruit는 없습니다."));
         origin.changeInfo(newRecruit.getWorkInfo(), newRecruit.getTargetInfo(), newRecruit.getWantedInfo(), newRecruit.getEtcInfo());
         origin.changeTitle(newRecruit.getTitle());
         origin.updateModifiedDate();
@@ -62,19 +63,19 @@ public class RecruitService {
     }
 
     public List<RecruitPageDto> findByPage(int offset, int limit) {
-        List<Recruit> recruits = recruitRepository.findByPage(offset, limit);
+        Pageable pageable = PageRequest.of(offset, limit);
+        List<Recruit> recruits = recruitRepository.findByPage(pageable);
 
-        List<RecruitPageDto> result = recruits.stream()
-                .map(o -> new RecruitPageDto(o))
+        List<RecruitPageDto> resultDtos = recruits.stream()
+                .map(r -> new RecruitPageDto(r))
                 .collect(Collectors.toList());
 
 
-        return result;
+        return resultDtos;
 
     }
 
-    public int countAll(){
-        List<Recruit> recruits = recruitRepository.findAll();
-        return recruits.size();
+    public long countAll(){
+        return recruitRepository.count();
     }
 }

@@ -18,6 +18,10 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AuthorizationServiceException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +37,15 @@ public class ResumeApiController {
     private final ResumeService resumeService;
     private final SubCatService subCatService;
 
+    @ApiOperation(value = "이력서 상세조회", notes = "이력서 하나를 조회한다.")
+    @GetMapping("/{id}")
+    public ResumeReadDto readResume(
+            @PathVariable("id") Long id
+    ){
+        Resume resume = resumeService.findById(id);
+        return new ResumeReadDto(resume);
+    }
+
     @ApiOperation(value = "이력서 페이지 조회", notes = "한 페이지 단위의 이력서를 조회한다.")
     @GetMapping
     public ResultPaging<ResumePageDto> readResumes(
@@ -44,14 +57,6 @@ public class ResumeApiController {
         return new ResultPaging(count, page, resumes);
     }
 
-    @ApiOperation(value = "이력서 상세조회", notes = "이력서 하나를 조회한다.")
-    @GetMapping("/{id}")
-    public ResumeReadDto readResume(
-            @PathVariable("id") Long id
-    ){
-        Resume resume = resumeService.findById(id);
-        return new ResumeReadDto(resume);
-    }
 
     @ApiOperation(value = "이력서 수정", notes = "이력서를 수정한다.")
     @PutMapping("/{id}")
@@ -59,12 +64,19 @@ public class ResumeApiController {
             @PathVariable("id") Long id,
             @RequestBody ResumeCUDRequestDto resumeCUDRequestDto){
 
-        User user = userService.findById(id);
+        User user = userService.getMyUser()
+                .orElseThrow(() -> new UsernameNotFoundException("현재 로그인된 정보를 가져오지 못했습니다."));
+        Resume target = resumeService.findById(id);
 
-        List<SubCategory> subCats = getSubCategories(resumeCUDRequestDto);
+        if( target.getUser() == user){
+            List<SubCategory> subCats = getSubCategories(resumeCUDRequestDto);
 
-        Resume newResume = resumeCUDRequestDto.createResume(user, subCats);
-        resumeService.update(id, newResume);
+            Resume newResume = resumeCUDRequestDto.createResume(user, subCats);
+            resumeService.update(id, newResume);
+        } else {
+            throw new AuthorizationServiceException("해당 글을 수정할 권한이 없습니다.");
+        }
+
 
         return new ResumeCUDResponseDto(id);
 
@@ -74,7 +86,17 @@ public class ResumeApiController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ResumeCUDResponseDto> deleteResume(
             @PathVariable("id") Long id){
-        resumeService.deleteById(id);
+
+        User user = userService.getMyUser()
+                .orElseThrow(() -> new UsernameNotFoundException("현재 로그인된 정보를 가져오지 못했습니다."));
+        Resume target = resumeService.findById(id);
+
+        if( target.getUser() == user){
+            resumeService.deleteById(id);
+        } else {
+            throw new AuthorizationServiceException("해당 글을 삭제할 권한이 없습니다.");
+        }
+
 
         return new ResponseEntity<>(new ResumeCUDResponseDto(id), HttpStatus.OK);
     }
@@ -82,7 +104,10 @@ public class ResumeApiController {
     @ApiOperation(value = "이력서 작성", notes = "이력서를 작성한다.")
     @PostMapping
     public ResponseEntity<ResumeCUDResponseDto> createResume(@RequestBody ResumeCUDRequestDto resumeCUDRequestDto){
-        User user = userService.findById(resumeCUDRequestDto.getUserId());
+
+        User user = userService.getMyUser()
+                .orElseThrow(() -> new UsernameNotFoundException("현재 로그인된 정보를 가져오지 못했습니다."));
+
         if(user == null){
             throw new IllegalStateException("해당 이름의 유저는 없습니다.");
         }
@@ -97,10 +122,9 @@ public class ResumeApiController {
 
     private List<SubCategory> getSubCategories(ResumeCUDRequestDto resumeCUDRequestDto) {
         List<SubCategoryCreateDto> catIds = resumeCUDRequestDto.getCats();
-        List<SubCategory> subCats = catIds.stream()
+        return catIds.stream()
                 .map(o -> subCatService.findOne(o.getId()))
                 .collect(Collectors.toList());
-        return subCats;
     }
 
 }

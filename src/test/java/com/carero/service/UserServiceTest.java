@@ -25,7 +25,6 @@ class UserServiceTest {
         String name = "회원가입test";
         int age = 30;
         Gender gender = Gender.MALE;
-        String email = "kkkkk@naver.com";
         String tel = "010-8888-8888";
         String city = "전라남도";
         String sigungu = "광주광역시";
@@ -36,7 +35,6 @@ class UserServiceTest {
                 .nickname("회원A")
                 .age(age)
                 .gender(gender)
-                .email(email)
                 .tel(tel)
                 .city(city)
                 .sigungu(sigungu)
@@ -57,7 +55,6 @@ class UserServiceTest {
         String name = "중복처리test";
         int age = 30;
         Gender gender = Gender.MALE;
-        String email = "kkkkk@naver.com";
         String tel = "010-8888-8888";
         String city = "전라남도";
         String sigungu = "광주광역시";
@@ -68,7 +65,6 @@ class UserServiceTest {
                 .nickname("회원A")
                 .age(age)
                 .gender(gender)
-                .email(email)
                 .tel(tel)
                 .city(city)
                 .sigungu(sigungu)
@@ -80,7 +76,6 @@ class UserServiceTest {
                 .nickname("회원A")
                 .age(age)
                 .gender(gender)
-                .email(email)
                 .tel(tel)
                 .city(city)
                 .sigungu(sigungu)

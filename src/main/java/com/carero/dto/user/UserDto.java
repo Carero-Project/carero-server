@@ -27,8 +27,6 @@ public class UserDto {
     @NonNull
     private Gender gender;
     @NonNull
-    private String email;
-    @NonNull
     private String tel;
     @NonNull
     private String city;
@@ -42,7 +40,6 @@ public class UserDto {
                 .nickname(this.nickname)
                 .password(this.password)
                 .age(this.age)
-                .email(this.email)
                 .gender(this.gender)
                 .tel(this.tel)
                 .city(this.city)

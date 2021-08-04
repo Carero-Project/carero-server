@@ -58,5 +58,8 @@ public class ResumePageDto {
         this.workWeek = resumeWantedInfoDto.getWantedWeek();
 
 
+        resume.getSubCats().stream().forEach(c -> c.getSubCategory().getSubCategoryName());
+        this.cat = resume.getSubCats().get(0).getSubCategory().getParentCategory().getCategoryName();
+        resume.getSubCats().stream().forEach(c -> this.subCats.add(c.getSubCategory().getSubCategoryName()));
     }
 }

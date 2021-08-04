@@ -96,7 +96,7 @@ class RecruitServiceTest {
 
         Long recruitId = recruitService.create(recruit);
         //when
-        Recruit findRecruit = recruitService.findOne(recruitId);
+        Recruit findRecruit = recruitService.findById(recruitId);
 
         //then
 

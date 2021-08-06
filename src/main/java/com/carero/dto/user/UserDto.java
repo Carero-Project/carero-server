@@ -5,6 +5,7 @@ import com.carero.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 
 @Data
@@ -13,7 +14,7 @@ import javax.validation.constraints.Size;
 @Builder
 public class UserDto {
     @NonNull
-    @Size(max=15)
+    @Email
     private String username;
 
     @JsonProperty(access=JsonProperty.Access.WRITE_ONLY)

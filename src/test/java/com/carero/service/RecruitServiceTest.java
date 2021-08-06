@@ -33,7 +33,6 @@ class RecruitServiceTest {
                 .nickname("recruit작성test")
                 .age(30)
                 .gender(Gender.MALE)
-                .email("kkkk@naver.com")
                 .tel("010-7666-6666")
                 .city("전라남도")
                 .sigungu("광주광역시")

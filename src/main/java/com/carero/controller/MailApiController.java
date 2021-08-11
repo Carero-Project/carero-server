@@ -14,7 +14,6 @@ import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.UUID;
-import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,18 +29,18 @@ public class MailApiController {
 
         HttpSession authSession = request.getSession();
 
-        String test = "킹수염고래";
         String authKey = UUID.randomUUID().toString();
         authKey = authKey.substring(0, 8);
 
         authSession.setAttribute(AUTH_NUM, authKey);
+        // 세션 유지 시간 : 60초
         authSession.setMaxInactiveInterval(60);
 
         try{
             MimeMessage msg = mailSender.createMimeMessage();
             MimeMessageHelper messageHelper = new MimeMessageHelper(msg, true, "UTF-8");
-            messageHelper.setSubject("테스트용 메일입니다.");
-            messageHelper.setText("테스트용 메일입니다 : "+authKey);
+            messageHelper.setSubject("[케어로] 회원가입 인증번호");
+            messageHelper.setText("케어로 회원가입 인증번호 : "+authKey);
             messageHelper.setTo(mailDto.getEmail());
 
             msg.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(mailDto.getEmail()));
@@ -49,6 +48,7 @@ public class MailApiController {
         }catch(MessagingException e){
             log.error("MessagingException");
             e.printStackTrace();
+            return "Fail";
         }
 
         return "Done";
@@ -65,9 +65,9 @@ public class MailApiController {
         }
 
         if(authKey.equals(myAuthKey)){
-            return "인증에 성공했습니다.";
+            return "Done";
         }else{
-            return "인증에 실패했습니다.";
+            return "Fail";
         }
 
     }

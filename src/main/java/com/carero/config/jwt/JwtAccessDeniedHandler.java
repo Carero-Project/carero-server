@@ -1,4 +1,4 @@
-package com.carero.jwt;
+package com.carero.config.jwt;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

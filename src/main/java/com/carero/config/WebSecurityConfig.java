@@ -1,9 +1,9 @@
 package com.carero.config;
 
-import com.carero.jwt.JwtAccessDeniedHandler;
-import com.carero.jwt.JwtAuthenticationEntryPoint;
-import com.carero.jwt.JwtSecurityConfig;
-import com.carero.jwt.TokenProvider;
+import com.carero.config.jwt.JwtAccessDeniedHandler;
+import com.carero.config.jwt.JwtAuthenticationEntryPoint;
+import com.carero.config.jwt.JwtSecurityConfig;
+import com.carero.config.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -62,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 .antMatchers("/auth").permitAll()
-                .antMatchers("/user/**").permitAll()
+                .antMatchers("/user/signup").permitAll()
                 .antMatchers("/mails/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/recruits/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/resumes/**").permitAll()

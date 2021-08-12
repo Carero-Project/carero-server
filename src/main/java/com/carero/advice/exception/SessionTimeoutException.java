@@ -1,4 +1,4 @@
-package com.carero.exception;
+package com.carero.advice.exception;
 
 public class SessionTimeoutException extends RuntimeException{
     public SessionTimeoutException() {

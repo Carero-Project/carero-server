@@ -1,4 +1,4 @@
-package com.carero.jwt;
+package com.carero.config.jwt;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

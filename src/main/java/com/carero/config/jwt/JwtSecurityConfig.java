@@ -1,4 +1,4 @@
-package com.carero.jwt;
+package com.carero.config.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;

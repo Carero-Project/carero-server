@@ -49,4 +49,14 @@ public class UserDto {
 
         return user;
     }
+
+    public UserDto(User user) {
+        this.username = user.getUsername();
+        this.nickname = user.getNickname();
+        this.age = user.getAge();
+        this.gender = user.getGender();
+        this.tel = user.getTel();
+        this.city = user.getCity();
+        this.sigungu = user.getSigungu();
+    }
 }

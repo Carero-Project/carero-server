@@ -2,8 +2,8 @@ package com.carero.controller;
 
 import com.carero.dto.LoginDto;
 import com.carero.dto.TokenDto;
-import com.carero.jwt.JwtFilter;
-import com.carero.jwt.TokenProvider;
+import com.carero.config.jwt.JwtFilter;
+import com.carero.config.jwt.TokenProvider;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;

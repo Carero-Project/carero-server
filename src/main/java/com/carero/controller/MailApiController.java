@@ -1,7 +1,7 @@
 package com.carero.controller;
 
+import com.carero.advice.exception.SessionTimeoutException;
 import com.carero.dto.MailDto;
-import com.carero.exception.SessionTimeoutException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -61,7 +61,7 @@ public class MailApiController {
         log.info("실제 키 = {}",authKey);
         log.info("내가 보낸 키 = {}",myAuthKey);
         if(authKey == null){
-            throw new SessionTimeoutException("세션 시간이 만료되었습니다.");
+            throw new SessionTimeoutException();
         }
 
         if(authKey.equals(myAuthKey)){

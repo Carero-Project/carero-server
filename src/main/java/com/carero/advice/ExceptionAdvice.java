@@ -2,35 +2,65 @@ package com.carero.advice;
 
 import com.carero.dto.response.RestResponse;
 import com.carero.advice.exception.*;
+import com.carero.service.ResponseService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestController
+import javax.mail.MessagingException;
+
+@RequiredArgsConstructor
 @RestControllerAdvice
 public class ExceptionAdvice {
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<RestResponse> processValidationError(MethodArgumentNotValidException ex) {
-        RestResponse restResponse = new RestResponse(false, -1000, "유효성 검사 실패 : " + ex.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+    private final ResponseService responseService;
 
-        return new ResponseEntity<>(restResponse, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestResponse processValidationError(MethodArgumentNotValidException ex) {
+        StringBuilder errorMessage = new StringBuilder("유효하지 않은 값이 들어왔습니다. :: ");
+        for (ObjectError error : ex.getAllErrors()) {
+            errorMessage.append(error.getDefaultMessage());
+            errorMessage.append("\n");
+
+        }
+        return responseService.getFailResponse(-1000, errorMessage.toString());
+
     }
 
     @ExceptionHandler(SameBeforePasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public RestResponse SameBeforePasswordException(){
-        return new RestResponse(false, -1001, "기존 비밀번호와 다르게 설정해주세요.");
+    public RestResponse sameBeforePasswordException(){
+        return responseService.getFailResponse(-1001, "기존 비밀번호와 다르게 설정해주세요.");
     }
 
     @ExceptionHandler(SessionTimeoutException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public RestResponse SessionTimeoutException(){
-        return new RestResponse(false, -1002, "세션 시간이 만료되었습니다.")
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestResponse sessionTimeoutException(){
+        return responseService.getFailResponse(-1002,"세션이 존재하지 않거나 시간이 만료되었습니다.");
     }
+
+    @ExceptionHandler(MyUserNotFoundException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestResponse suchUserNotFoundException(){
+        return responseService.getFailResponse(-1003, "현재 로그인된 정보를 가져오지 못했습니다.");
+    }
+
+    @ExceptionHandler(MailAuthKeyNotEqualException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public RestResponse mailAuthKeyNotEqualException(){
+        return responseService.getFailResponse(-1003, "인증번호가 일치하지 않습니다.");
+    }
+
+    @ExceptionHandler(MessagingException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestResponse messagingException(){
+        return responseService.getFailResponse(-2000, "메일 관련 오류가 발생했습니다.");
+    }
+
 
 
 }

@@ -11,4 +11,11 @@ public class RestResponse{
     private boolean success;
     private int code;
     private String msg;
+
+
+    public void setSuccessResult(){
+        this.success = true;
+        this.code = 200;
+        this.msg = "success";
+    }
 }

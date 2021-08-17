@@ -4,6 +4,8 @@ import com.carero.dto.LoginDto;
 import com.carero.dto.TokenDto;
 import com.carero.config.jwt.JwtFilter;
 import com.carero.config.jwt.TokenProvider;
+import com.carero.dto.response.RestResponse;
+import com.carero.service.ResponseService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +30,11 @@ import javax.validation.Valid;
 public class AuthApiController {
     private final TokenProvider tokenProvider;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final ResponseService responseService;
 
     @ApiOperation(value = "인증처리", notes = "로그인 하여 인증 토큰을 받는다.")
     @PostMapping
-    public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
+    public RestResponse authorize(@Valid @RequestBody LoginDto loginDto) {
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
 
@@ -40,9 +43,6 @@ public class AuthApiController {
 
         String jwt = tokenProvider.createToken(auth);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+        return responseService.getSingleResponse(new TokenDto(jwt));
     }
 }

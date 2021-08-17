@@ -1,5 +1,7 @@
 package com.carero.service;
 
+import com.carero.advice.exception.NoSuchRecruitException;
+import com.carero.advice.exception.NoSuchUserException;
 import com.carero.domain.recruit.Recruit;
 import com.carero.domain.recruit.RecruitSubCat;
 import com.carero.dto.recruit.RecruitPageDto;
@@ -27,7 +29,7 @@ public class RecruitService {
     }
 
     public Recruit findById(Long recruitId){
-        return recruitRepository.findById(recruitId).orElseThrow(()-> new IllegalStateException("해당 ID의 Recruit는 없습니다."));
+        return recruitRepository.findById(recruitId).orElseThrow(NoSuchRecruitException::new);
     }
 
     public List<Recruit> findAll(){
@@ -48,7 +50,7 @@ public class RecruitService {
     public void update(Long id, Recruit newRecruit) {
 
         // userId 와 일치하는지 삽입 필요
-        Recruit origin = recruitRepository.findById(id).orElseThrow(() -> new IllegalStateException("해당 ID의 Recruit는 없습니다."));
+        Recruit origin = recruitRepository.findById(id).orElseThrow(NoSuchRecruitException::new);
         origin.changeInfo(newRecruit.getWorkInfo(), newRecruit.getTargetInfo(), newRecruit.getWantedInfo(), newRecruit.getEtcInfo());
         origin.changeTitle(newRecruit.getTitle());
         origin.updateModifiedDate();

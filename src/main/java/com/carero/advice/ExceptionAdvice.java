@@ -49,6 +49,24 @@ public class ExceptionAdvice {
         return responseService.getFailResponse(-1003, "현재 로그인된 정보를 가져오지 못했습니다.");
     }
 
+    @ExceptionHandler(NoSuchUserException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestResponse noSuchUserException(){
+        return responseService.getFailResponse(-1004, "해당 정보의 유저를 찾을 수 없습니다.");
+    }
+
+    @ExceptionHandler(NoSuchRecruitException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestResponse noSuchRecruitException(){
+        return responseService.getFailResponse(-1005, "해당 ID의 Recruit를 찾을 수 없습니다.");
+    }
+
+    @ExceptionHandler(NoSuchResumeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestResponse noSuchResumeException(){
+        return responseService.getFailResponse(-1004, "해당 ID의 Resume을 찾을 수 없습니다.");
+    }
+
     @ExceptionHandler(MailAuthKeyNotEqualException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public RestResponse mailAuthKeyNotEqualException(){

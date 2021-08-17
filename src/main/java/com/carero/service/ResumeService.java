@@ -1,5 +1,7 @@
 package com.carero.service;
 
+import com.carero.advice.exception.NoSuchResumeException;
+import com.carero.advice.exception.NoSuchUserException;
 import com.carero.domain.resume.Resume;
 import com.carero.domain.resume.ResumeSubCat;
 import com.carero.dto.resume.ResumePageDto;
@@ -34,7 +36,7 @@ public class ResumeService {
 
     @Transactional
     public void update(Long id, Resume newResume) {
-        Resume origin = resumeRepository.findById(id).get();
+        Resume origin = resumeRepository.findById(id).orElseThrow(NoSuchResumeException::new);
 
         origin.changeInfo(newResume.getCertificationInfo(), newResume.getResumeWantedInfo(), newResume.getEducationInfo(),
                 newResume.getCareerInfo(), newResume.getDetailInfo());
@@ -56,7 +58,7 @@ public class ResumeService {
     }
 
     public Resume findById(Long id) {
-        return resumeRepository.findById(id).orElseThrow(() -> new IllegalStateException("해당 ID의 Resume이 없습니다."));
+        return resumeRepository.findById(id).orElseThrow(NoSuchResumeException::new);
     }
 
     public List<ResumePageDto> findByPage(int offset, int limit) {

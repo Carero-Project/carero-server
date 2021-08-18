@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,18 +16,18 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class CertificationInfoDto {
 
-    private List<CertificateDto> certificates;
+    private List<@Valid CertificateDto> certificates;
 
-    @NotEmpty
+    @NotNull
     private Boolean agreeCctv;
 
-    @NotEmpty
+    @NotNull
     private Boolean isInsurance;
 
-    @NotEmpty
+    @NotNull
     private Boolean haveCrimeCert;
 
-    public CertificationInfoDto(CertificationInfo certificationInfo){
+    public CertificationInfoDto(CertificationInfo certificationInfo) {
         this.certificates = certificationInfo.getCertificates().stream()
                 .map(certificate -> new CertificateDto(certificate)).collect(Collectors.toList());
         this.agreeCctv = certificationInfo.getAgreeCctv();
@@ -42,14 +44,22 @@ public class CertificationInfoDto {
         this.haveCrimeCert = haveCrimeCert;
     }
 
-    public CertificationInfo toEntity(){
-        List<Certificate> certificates = this.certificates
-                .stream()
-                .map(c -> new Certificate(c.getName(), c.getAcquisitionDate()))
-                .collect(Collectors.toList());
+    public CertificationInfo toEntity() {
+
+        // 자격증이 없을 때
+        List<Certificate> certificatesList;
+
+        if (this.certificates != null) {
+            certificatesList = this.certificates
+                    .stream()
+                    .map(c -> new Certificate(c.getName(), c.getAcquisitionDate()))
+                    .collect(Collectors.toList());
+        } else {
+            certificatesList = null;
+        }
 
         CertificationInfo certificationInfo = CertificationInfo.builder()
-                .certificates(certificates)
+                .certificates(certificatesList)
                 .agreeCctv(agreeCctv)
                 .isInsurance(isInsurance)
                 .haveCrimeCert(haveCrimeCert)

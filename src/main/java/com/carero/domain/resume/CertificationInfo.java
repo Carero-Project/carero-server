@@ -13,7 +13,8 @@ import java.util.List;
 @NoArgsConstructor
 public class CertificationInfo {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "certification_info_id")
     private Long id;
 
@@ -39,12 +40,14 @@ public class CertificationInfo {
         this.isInsurance = isInsurance;
         this.haveCrimeCert = haveCrimeCert;
 
-        if(!certificates.isEmpty()){
+        if (certificates != null && certificates.size() > 0) {
             haveCertificate = true;
 
             for (Certificate certificate : certificates) {
                 certificate.connectCertificationInfo(this);
             }
+        }else{
+            haveCertificate = false;
         }
 
 

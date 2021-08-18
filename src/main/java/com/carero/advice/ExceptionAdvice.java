@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.mail.MessagingException;
+import java.util.Arrays;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @RestControllerAdvice
@@ -23,9 +25,16 @@ public class ExceptionAdvice {
     public RestResponse processValidationError(MethodArgumentNotValidException ex) {
         StringBuilder errorMessage = new StringBuilder("유효하지 않은 값이 들어왔습니다. :: ");
         for (ObjectError error : ex.getAllErrors()) {
-            errorMessage.append(error.getDefaultMessage());
-            errorMessage.append("\n");
+            Arrays.stream(Objects.requireNonNull(error.getArguments())).forEach(e-> {
+//                String result = str.substring(str.lastIndexOf("/")+1);
+                String errorPartStr = e.toString();
+                String errorPartStrSubstring = errorPartStr.substring(errorPartStr.indexOf("["), errorPartStr.indexOf("]")+1);
 
+                errorMessage.append(errorPartStrSubstring);
+            });
+            errorMessage.append(":");
+            errorMessage.append(error.getDefaultMessage());
+            errorMessage.append(",");
         }
         return responseService.getFailResponse(-1000, errorMessage.toString());
 

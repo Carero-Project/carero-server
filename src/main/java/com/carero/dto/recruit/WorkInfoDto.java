@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -15,19 +16,31 @@ public class WorkInfoDto {
     }
 
     @NotEmpty
+    @NotNull
     private String city;
+
     @NotEmpty
+    @NotNull
     private String sigungu;
+
     private String workWeek;
+
     private String workType;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate workStartDate;
+
     private String workTermDate;
+
     private String wage;
+
     private String wageType;
-    @NotEmpty
+
+    @NotNull
     private Boolean isCctv;
+
     private String familyInfo;
+
     private String mainInfo;
 
     public WorkInfoDto(WorkInfo workInfo) {
@@ -45,7 +58,7 @@ public class WorkInfoDto {
 
     }
 
-    public WorkInfo toEntity(){
+    public WorkInfo toEntity() {
 
         WorkInfo workInfo = WorkInfo.builder()
                 .city(city)
@@ -66,7 +79,7 @@ public class WorkInfoDto {
 
     @Builder
     public WorkInfoDto(@NotEmpty String city, @NotEmpty String sigungu, String wageType,
-                       String workWeek, String workType, LocalDate workStartDate, String workTermDate,String wage, @NotEmpty Boolean isCctv,
+                       String workWeek, String workType, LocalDate workStartDate, String workTermDate, String wage, @NotEmpty Boolean isCctv,
                        String familyInfo, String mainInfo) {
         this.city = city;
         this.sigungu = sigungu;

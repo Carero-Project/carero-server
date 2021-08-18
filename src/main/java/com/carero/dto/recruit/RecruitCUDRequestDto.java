@@ -7,7 +7,9 @@ import com.carero.dto.SubCategoryCreateDto;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
@@ -16,26 +18,24 @@ public class RecruitCUDRequestDto {
     }
 
     @NotEmpty
+    @NotNull
     private String title;
 
     @NotEmpty
+    @NotNull
     private List<SubCategoryCreateDto> cats;
 
     // WorkInfo
-    @NotEmpty
-    WorkInfoDto workInfo;
+    @Valid WorkInfoDto workInfo;
 
     // TargetInfo
-    @NotEmpty
-    TargetInfoDto targetInfo;
+    @Valid TargetInfoDto targetInfo;
 
     // WantedInfo
-    @NotEmpty
-    WantedInfoDto wantedInfo;
+    @Valid WantedInfoDto wantedInfo;
 
     // EtcInfo
-    @NotEmpty
-    EtcInfoDto etcInfo;
+    @Valid EtcInfoDto etcInfo;
 
     @Builder
     public RecruitCUDRequestDto(@NotEmpty String title,
@@ -61,7 +61,7 @@ public class RecruitCUDRequestDto {
 
         EtcInfo etcInfo = this.etcInfo.toEntity();
 
-        Recruit recruit = Recruit.builder()
+        return Recruit.builder()
                 .user(user)
                 .title(title)
                 .etcInfo(etcInfo)
@@ -70,7 +70,5 @@ public class RecruitCUDRequestDto {
                 .workInfo(workInfo)
                 .subCats(subCats)
                 .build();
-
-        return recruit;
     }
 }

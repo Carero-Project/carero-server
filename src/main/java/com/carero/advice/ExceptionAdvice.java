@@ -73,13 +73,19 @@ public class ExceptionAdvice {
     @ExceptionHandler(NoSuchResumeException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public RestResponse noSuchResumeException(){
-        return responseService.getFailResponse(-1004, "해당 ID의 Resume을 찾을 수 없습니다.");
+        return responseService.getFailResponse(-1006, "해당 ID의 Resume을 찾을 수 없습니다.");
     }
 
     @ExceptionHandler(MailAuthKeyNotEqualException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public RestResponse mailAuthKeyNotEqualException(){
-        return responseService.getFailResponse(-1003, "인증번호가 일치하지 않습니다.");
+        return responseService.getFailResponse(-1007, "인증번호가 일치하지 않습니다.");
+    }
+
+    @ExceptionHandler(NoSuchZzimException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestResponse noSuchZzimException(){
+        return responseService.getFailResponse(-1008, "해당 ID의 찜을 찾을 수 없습니다.");
     }
 
     @ExceptionHandler(MessagingException.class)

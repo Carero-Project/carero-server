@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 @Data
@@ -19,6 +20,7 @@ public class UserDto {
 
     @JsonProperty(access=JsonProperty.Access.WRITE_ONLY)
     @NonNull
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d$@$!%*#?&]{6,}$",message = "6자 이상, 문자와 숫자를 반드시 사용해주세요.")
     private String password;
 
     @NonNull

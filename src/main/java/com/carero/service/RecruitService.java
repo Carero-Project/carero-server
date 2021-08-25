@@ -1,11 +1,14 @@
 package com.carero.service;
 
 import com.carero.advice.exception.NoSuchRecruitException;
-import com.carero.advice.exception.NoSuchUserException;
+import com.carero.advice.exception.NoSuchZzimException;
+import com.carero.domain.RecruitZzim;
 import com.carero.domain.recruit.Recruit;
 import com.carero.domain.recruit.RecruitSubCat;
+import com.carero.domain.user.User;
 import com.carero.dto.recruit.RecruitPageDto;
 import com.carero.repository.RecruitRepository;
+import com.carero.repository.RecruitZzimRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +24,7 @@ import java.util.stream.Collectors;
 public class RecruitService {
 
     private final RecruitRepository recruitRepository;
+    private final RecruitZzimRepository recruitZzimRepository;
 
     @Transactional
     public Long create(Recruit recruit){
@@ -79,5 +83,22 @@ public class RecruitService {
 
     public long countAll(){
         return recruitRepository.count();
+    }
+
+    @Transactional
+    public Long zzim(User user, Recruit recruit){
+        RecruitZzim recruitZzim = new RecruitZzim(user, recruit);
+        recruitZzimRepository.save(recruitZzim);
+        return recruitZzim.getId();
+    }
+
+    @Transactional
+    public void deleteZzim(Long zzimId){
+        RecruitZzim recruitZzim = recruitZzimRepository.findById(zzimId).orElseThrow(NoSuchZzimException::new);
+        recruitZzimRepository.delete(recruitZzim);
+    }
+
+    public RecruitZzim findZzimById(Long zzimId){
+        return recruitZzimRepository.findById(zzimId).orElseThrow(NoSuchZzimException::new);
     }
 }

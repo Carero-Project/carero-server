@@ -11,7 +11,6 @@ import javax.validation.constraints.Size;
 @Builder
 public class LoginDto {
     @NonNull
-    @Size(max=15)
     private String username;
 
     @NonNull

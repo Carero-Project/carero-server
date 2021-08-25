@@ -1,9 +1,13 @@
 package com.carero.controller;
 
 import com.carero.advice.exception.MyUserNotFoundException;
+import com.carero.domain.RecruitZzim;
+import com.carero.domain.ResumeZzim;
 import com.carero.domain.cat.SubCategory;
+import com.carero.domain.recruit.Recruit;
 import com.carero.domain.resume.Resume;
 import com.carero.domain.user.User;
+import com.carero.dto.ZzimDto;
 import com.carero.dto.response.PageResponse;
 import com.carero.dto.SubCategoryCreateDto;
 import com.carero.dto.response.RestResponse;
@@ -116,6 +120,33 @@ public class ResumeApiController {
         Long id = resumeService.create(resume);
 
         return responseService.getSingleResponse(new ResumeCUDResponseDto(id));
+    }
+
+    @PostMapping("/zzim")
+    public RestResponse zzim(@RequestBody ZzimDto zzimDto){
+        User user = userService.getMyUser()
+                .orElseThrow(MyUserNotFoundException::new);
+
+        Resume resume = resumeService.findById(zzimDto.getId());
+        resumeService.zzim(user, resume);
+
+        return responseService.getSuccessResponse();
+    }
+
+    @DeleteMapping("/zzim/{id}")
+    public RestResponse deleteZzim(@PathVariable("id") Long zzimId){
+        User user = userService.getMyUser()
+                .orElseThrow(MyUserNotFoundException::new);
+
+        ResumeZzim target = resumeService.findZzimById(zzimId);
+
+        if (target.getUser() == user ){
+            resumeService.deleteZzim(zzimId);
+        } else{
+            throw new AuthorizationServiceException("해당 찜 목록을 삭제할 권한이 없습니다.");
+        }
+
+        return responseService.getSuccessResponse();
     }
 
     private List<SubCategory> getSubCategories(ResumeCUDRequestDto resumeCUDRequestDto) {

@@ -1,9 +1,11 @@
 package com.carero.controller;
 
 import com.carero.advice.exception.MyUserNotFoundException;
+import com.carero.domain.RecruitZzim;
 import com.carero.domain.cat.SubCategory;
 import com.carero.domain.recruit.Recruit;
 import com.carero.domain.user.User;
+import com.carero.dto.ZzimDto;
 import com.carero.dto.response.PageResponse;
 import com.carero.dto.recruit.RecruitPageDto;
 import com.carero.dto.recruit.RecruitReadDto;
@@ -121,6 +123,33 @@ public class RecruitApiController {
         Long id = recruitService.create(recruit);
 
         return responseService.getSingleResponse(new RecruitCUDResponseDto(id));
+    }
+
+    @PostMapping("/zzim")
+    public RestResponse zzim(@RequestBody ZzimDto zzimDto){
+        User user = userService.getMyUser()
+                .orElseThrow(MyUserNotFoundException::new);
+
+        Recruit recruit = recruitService.findById(zzimDto.getId());
+        recruitService.zzim(user, recruit);
+
+        return responseService.getSuccessResponse();
+    }
+
+    @DeleteMapping("/zzim/{id}")
+    public RestResponse deleteZzim(@PathVariable("id") Long zzimId){
+        User user = userService.getMyUser()
+                .orElseThrow(MyUserNotFoundException::new);
+
+        RecruitZzim target = recruitService.findZzimById(zzimId);
+
+        if (target.getUser() == user ){
+            recruitService.deleteZzim(zzimId);
+        } else{
+            throw new AuthorizationServiceException("해당 찜 목록을 삭제할 권한이 없습니다.");
+        }
+
+        return responseService.getSuccessResponse();
     }
 
     private List<SubCategory> getSubCategories(@RequestBody RecruitCUDRequestDto recruitCUDRequestDto) {

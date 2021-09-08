@@ -1,48 +1,43 @@
 package com.carero.controller;
 
 import com.carero.advice.exception.MyUserNotFoundException;
-import com.carero.domain.RecruitZzim;
 import com.carero.domain.ResumeZzim;
 import com.carero.domain.cat.SubCategory;
-import com.carero.domain.recruit.Recruit;
 import com.carero.domain.resume.Resume;
 import com.carero.domain.user.User;
 import com.carero.dto.ZzimDto;
-import com.carero.dto.response.PageResponse;
 import com.carero.dto.SubCategoryCreateDto;
 import com.carero.dto.response.RestResponse;
 import com.carero.dto.resume.ResumeCUDResponseDto;
 import com.carero.dto.resume.ResumeCUDRequestDto;
 import com.carero.dto.resume.ResumePageDto;
 import com.carero.dto.resume.ResumeReadDto;
-import com.carero.service.ResponseService;
-import com.carero.service.SubCatService;
-import com.carero.service.UserService;
-import com.carero.service.ResumeService;
+import com.carero.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AuthorizationServiceException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
 @RequiredArgsConstructor
+@Slf4j
 @Api(tags = {"Resume"})
 @RequestMapping("/resumes")
+@RestController
 public class ResumeApiController {
 
     private final UserService userService;
     private final ResumeService resumeService;
     private final SubCatService subCatService;
     private final ResponseService responseService;
+    private final FileStorageService storageService;
 
     @ApiOperation(value = "이력서 상세조회", notes = "이력서 하나를 조회한다.")
     @GetMapping("/{id}")
@@ -70,7 +65,9 @@ public class ResumeApiController {
     @PutMapping("/{id}")
     public RestResponse updateResume(
             @PathVariable("id") Long id,
-            @Valid @RequestBody ResumeCUDRequestDto resumeCUDRequestDto) {
+            @Valid @RequestPart("resume") ResumeCUDRequestDto resumeCUDRequestDto,
+            @RequestPart("thumbnail") MultipartFile thumbnail // TODO 썸네일 수정작업 필요
+    ) {
 
         User user = userService.getMyUser()
                 .orElseThrow(MyUserNotFoundException::new);
@@ -107,23 +104,20 @@ public class ResumeApiController {
         return responseService.getSingleResponse(new ResumeCUDResponseDto(id));
     }
 
+//    파일 업로드 + Resume 작성
     @ApiOperation(value = "이력서 작성", notes = "이력서를 작성한다.")
     @PostMapping
-    public RestResponse createResume(@Valid @RequestBody ResumeCUDRequestDto resumeCUDRequestDto) {
-
+    public RestResponse createResume(@Valid @RequestPart("resume") ResumeCUDRequestDto resumeDto,
+                                 @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail){
         User user = userService.getMyUser()
                 .orElseThrow(MyUserNotFoundException::new);
 
-        List<SubCategory> subCats = getSubCategories(resumeCUDRequestDto);
-
-        Resume resume = resumeCUDRequestDto.createResume(user, subCats);
-        Long id = resumeService.create(resume);
-
-        return responseService.getSingleResponse(new ResumeCUDResponseDto(id));
+        Long result = resumeService.create(user, resumeDto, thumbnail);
+        return responseService.getSingleResponse(result);
     }
 
     @PostMapping("/zzim")
-    public RestResponse zzim(@RequestBody ZzimDto zzimDto){
+    public RestResponse zzim(@RequestBody ZzimDto zzimDto) {
         User user = userService.getMyUser()
                 .orElseThrow(MyUserNotFoundException::new);
 
@@ -134,15 +128,15 @@ public class ResumeApiController {
     }
 
     @DeleteMapping("/zzim/{id}")
-    public RestResponse deleteZzim(@PathVariable("id") Long zzimId){
+    public RestResponse deleteZzim(@PathVariable("id") Long zzimId) {
         User user = userService.getMyUser()
                 .orElseThrow(MyUserNotFoundException::new);
 
         ResumeZzim target = resumeService.findZzimById(zzimId);
 
-        if (target.getUser() == user ){
+        if (target.getUser() == user) {
             resumeService.deleteZzim(zzimId);
-        } else{
+        } else {
             throw new AuthorizationServiceException("해당 찜 목록을 삭제할 권한이 없습니다.");
         }
 

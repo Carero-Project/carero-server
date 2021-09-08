@@ -94,6 +94,10 @@ public class ExceptionAdvice {
         return responseService.getFailResponse(-2000, "메일 관련 오류가 발생했습니다.");
     }
 
-
+    @ExceptionHandler(FileStoreException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestResponse fileStoreException() {
+        return responseService.getFailResponse(-3000,"서버에 파일을 업로드 하는 것이 실패했습니다.");
+    }
 
 }

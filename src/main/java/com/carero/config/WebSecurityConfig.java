@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -50,6 +51,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
 
         http
+            .cors()
+                .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+            .and()
                 // 토큰을 활용하기 때문에 세션 필요없으므로 Stateless 설정
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

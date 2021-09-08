@@ -46,7 +46,7 @@ public class ResumeReadDto {
         this.status=resume.getStatus();
         this.viewCount=resume.getViewCount();
 
-        resume.getSubCats().stream().forEach(c -> this.subCats.add(c.getSubCategory().getSubCategoryName()));
+        resume.getSubCats().forEach(c -> this.subCats.add(c.getSubCategory().getSubCategoryName()));
 
         this.cat=resume.getSubCats().get(0).getSubCategory().getParentCategory().getCategoryName();
 

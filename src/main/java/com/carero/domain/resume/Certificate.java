@@ -1,12 +1,10 @@
 package com.carero.domain.resume;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -18,6 +16,9 @@ public class Certificate {
 
     private String name;
 
+    // 발행기관
+    private String issuer;
+
     private LocalDate acquisitionDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -28,8 +29,9 @@ public class Certificate {
         this.certificationInfo = certificationInfo;
     }
 
-    public Certificate(String name, LocalDate acquisitionDate) {
+    public Certificate(String name, LocalDate acquisitionDate, String issuer) {
         this.name = name;
         this.acquisitionDate = acquisitionDate;
+        this.issuer = issuer;
     }
 }

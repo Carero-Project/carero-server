@@ -52,7 +52,7 @@ public class CertificationInfoDto {
         if (this.certificates != null) {
             certificatesList = this.certificates
                     .stream()
-                    .map(c -> new Certificate(c.getName(), c.getAcquisitionDate()))
+                    .map(c -> new Certificate(c.getName(), c.getAcquisitionDate(),c.getIssuer()))
                     .collect(Collectors.toList());
         } else {
             certificatesList = null;

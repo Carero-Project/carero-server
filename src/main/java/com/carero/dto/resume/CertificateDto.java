@@ -20,13 +20,21 @@ public class CertificateDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate acquisitionDate;
 
+    // 발행기관
+    @NotNull
+    @NotEmpty
+    private String issuer;
+
+
     public CertificateDto(Certificate certificate){
         this.name = certificate.getName();
         this.acquisitionDate = certificate.getAcquisitionDate();
+        this.issuer = certificate.getIssuer();
     }
 
-    public CertificateDto(String name, LocalDate acquisitionDate) {
+    public CertificateDto(String name, LocalDate acquisitionDate, String issuer) {
         this.name = name;
         this.acquisitionDate = acquisitionDate;
+        this.issuer = issuer;
     }
 }

@@ -12,6 +12,7 @@ import com.carero.domain.user.User;
 import com.carero.dto.SubCategoryCreateDto;
 import com.carero.dto.resume.ResumeCUDRequestDto;
 import com.carero.dto.resume.ResumePageDto;
+import com.carero.dto.resume.ResumeReadDto;
 import com.carero.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,14 +37,6 @@ public class ResumeService {
 
     // 파일관련
     private final FileStorageService fileStorageService;
-    private final FileRepository fileRepository;
-    private final ResumeFileRepository resumeFileRepository;
-
-    @Transactional
-    public Long create(Resume resume) {
-        resumeRepository.save(resume);
-        return resume.getId();
-    }
 
     @Transactional
     public Long create(User user, ResumeCUDRequestDto resumeDto, MultipartFile thumbnail) {
@@ -52,7 +45,7 @@ public class ResumeService {
 
         Resume resume = resumeDto.createResume(user, subCats);
         ResumeFile thumbResumeFile = saveResumeFile(thumbnail, FileDescType.THUMBNAIL);
-        if( thumbResumeFile != null){
+        if (thumbResumeFile != null) {
             resume.addFile(thumbResumeFile);
         }
 
@@ -64,8 +57,9 @@ public class ResumeService {
 
     //    자격증 외 Resume 관련 파일을 서버에 저장하고 DB에도 저장
     private ResumeFile saveResumeFile(MultipartFile file, FileDescType descType) {
-        if (file != null) {
+        if (file != null && !file.isEmpty()) {
             UploadFile crimeFile = fileStorageService.storeFile(file);
+
 //            fileRepository.save(crimeFile);
             return new ResumeFile(crimeFile, descType);
         }
@@ -76,7 +70,7 @@ public class ResumeService {
     public void deleteById(Long id) {
         // 만약 ResumeFile로 서버에 저장된 파일이 존재한다면? -> 삭제해주는 작업 필요 Done
         Resume targetResume = resumeRepository.findById(id).orElseThrow(NoSuchResumeException::new);
-        List<ResumeFile> resumeFiles = targetResume.getResumeFile();
+        List<ResumeFile> resumeFiles = targetResume.getResumeFiles();
         List<String> fileNames = resumeFiles.stream()
                 .map(resumeFile -> resumeFile.getFile().getFileName())
                 .collect(Collectors.toList());
@@ -93,7 +87,7 @@ public class ResumeService {
     }
 
     @Transactional
-    public void update(Long id, Resume newResume) {
+    public void update(Long id, Resume newResume, MultipartFile newThumbnailFile) {
         Resume origin = resumeRepository.findById(id).orElseThrow(NoSuchResumeException::new);
 
         origin.changeInfo(newResume.getCertificationInfo(), newResume.getResumeWantedInfo(), newResume.getEducationInfo(),
@@ -105,6 +99,25 @@ public class ResumeService {
         origin.changeContactTime(newResume.getContactTime());
         origin.updateModifiedDate();
 
+        // 파일 수정
+        List<ResumeFile> resumeFiles = origin.getResumeFiles();
+
+        if (resumeFiles.size() > 0) {
+            List<String> fileNames = resumeFiles.stream()
+                    .map(resumeFile -> resumeFile.getFile().getFileName())
+                    .collect(Collectors.toList());
+
+            fileStorageService.deleteByFileNames(fileNames);
+            origin.getResumeFiles().clear();
+        }
+
+        if (newThumbnailFile != null) {
+            ResumeFile newThumbnail = saveResumeFile(newThumbnailFile, FileDescType.THUMBNAIL);
+            if (newThumbnail != null) {
+                origin.addFile(newThumbnail);
+            }
+        }
+
         // cats 테이블에 업데이트
         origin.getSubCats().clear();
         List<ResumeSubCat> cats = newResume.getSubCats();
@@ -112,11 +125,6 @@ public class ResumeService {
             origin.addCat(cat);
         }
 
-
-    }
-
-    public Resume findById(Long id) {
-        return resumeRepository.findById(id).orElseThrow(NoSuchResumeException::new);
     }
 
     public List<ResumePageDto> findByPage(int offset, int limit) {
@@ -126,6 +134,7 @@ public class ResumeService {
         List<ResumePageDto> resumeDtos = resumes.stream()
                 .map(ResumePageDto::new)
                 .collect(Collectors.toList());
+
 
         return resumeDtos;
     }
@@ -156,5 +165,25 @@ public class ResumeService {
         return catIds.stream()
                 .map(o -> subCatService.findOne(o.getId()))
                 .collect(Collectors.toList());
+    }
+
+    public Resume findById(Long id){
+        return resumeRepository.findById(id).orElseThrow(NoSuchResumeException::new);
+    }
+
+    public ResumeReadDto findByIdWithThumbnail(Long id) {
+        Resume resume = resumeRepository.findByIdWithThumbnail(id);
+
+        ResumeReadDto resumeReadDto = new ResumeReadDto(resume);
+        List<ResumeFile> thumbnailResumeFileList = resume.getResumeFiles().stream()
+                .filter(file -> file.getDesc().equals(FileDescType.THUMBNAIL))
+                .collect(Collectors.toList());
+        if (thumbnailResumeFileList.size() > 0) {
+            ResumeFile thumbnailResumeFile = thumbnailResumeFileList.get(0);
+            String thumbFileName = thumbnailResumeFile.getFile().getFileName();
+            resumeReadDto.attachThumbnail(thumbFileName);
+        }
+
+        return resumeReadDto;
     }
 }

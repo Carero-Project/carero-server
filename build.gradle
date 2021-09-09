@@ -19,6 +19,8 @@ repositories {
 }
 
 dependencies {
+    // 파일업로드용 IOUtils 써서 StreamToByteArray 작업실시위함
+    implementation 'commons-io:commons-io:2.6'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
 
     implementation 'io.springfox:springfox-swagger2:2.6.1'

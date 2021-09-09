@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <img id="here" src="">
+    <script>
+
+        fetch("http://localhost:8080/test/04-08김범수.jpg", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization":"Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiLtmozsm5BBIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTYzMDU4MTE1Mn0.jQ45waflniOoWacJVxauBaDpYH3kX7lRBVaFGHL-vff2d1npJFRX_lB5DtIDXQkhvGscwkjVTBpray1SqeDE9g"
+            }
+        }).then((response) => {
+
+        });
+
+
+    </script>
+</body>
+</html>

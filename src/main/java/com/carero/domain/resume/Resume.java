@@ -1,7 +1,6 @@
 package com.carero.domain.resume;
 
 import com.carero.domain.cat.SubCategory;
-import com.carero.domain.recruit.RecruitSubCat;
 import com.carero.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -67,7 +66,7 @@ public class Resume {
     private String detailInfo;
 
     @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ResumeFile> resumeFile = new ArrayList<>();
+    private List<ResumeFile> resumeFiles = new ArrayList<>();
 
     public void changeNation(String nation) {
         this.nation = nation;
@@ -133,7 +132,7 @@ public class Resume {
     }
 
     public void addFile(ResumeFile resumeFile){
-        this.resumeFile.add(resumeFile);
+        this.resumeFiles.add(resumeFile);
         resumeFile.connectResume(this);
     }
 }

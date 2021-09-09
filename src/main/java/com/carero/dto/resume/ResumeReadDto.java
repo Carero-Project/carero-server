@@ -1,11 +1,8 @@
 package com.carero.dto.resume;
 
-import com.carero.domain.resume.CertificationInfo;
 import com.carero.domain.resume.Resume;
-import com.carero.domain.resume.ResumeWantedInfo;
 import lombok.Data;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +11,7 @@ import java.util.List;
 public class ResumeReadDto {
 
     private Long id;
+    private String thumbnail;
     private String title;
     private String username;
     private String cat;
@@ -52,5 +50,11 @@ public class ResumeReadDto {
 
         this.certificationInfo = new CertificationInfoDto(resume.getCertificationInfo());
         this.resumeWantedInfo = new ResumeWantedInfoDto(resume.getResumeWantedInfo());
+
+        this.thumbnail = null;
+    }
+
+    public void attachThumbnail(String thumbnailFileName){
+        this.thumbnail =  "http://localhost:8080/files/"+ thumbnailFileName;
     }
 }

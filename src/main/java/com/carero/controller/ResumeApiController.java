@@ -40,9 +40,10 @@ public class ResumeApiController {
 
     @GetMapping("/{id}")
     public RestResponse readResume(@PathVariable("id") Long id) {
-        Resume resume = resumeService.findById(id);
+        ResumeReadDto resumeDto = resumeService.findByIdWithThumbnail(id);
+//        Resume resume = resumeService.findById(id);
 
-        return responseService.getSingleResponse(new ResumeReadDto(resume));
+        return responseService.getSingleResponse(resumeDto);
     }
 
     @GetMapping
@@ -59,7 +60,7 @@ public class ResumeApiController {
     public RestResponse updateResume(
             @PathVariable("id") Long id,
             @Valid @RequestPart("resume") ResumeCUDRequestDto resumeCUDRequestDto,
-            @RequestPart("thumbnail") MultipartFile thumbnail // TODO 썸네일 수정작업 필요
+            @RequestPart(name = "thumbnail", required = false) MultipartFile thumbnail // TODO 썸네일 수정작업 필요
     ) {
 
         User user = userService.getMyUser()
@@ -70,7 +71,7 @@ public class ResumeApiController {
             List<SubCategory> subCats = getSubCategories(resumeCUDRequestDto);
 
             Resume newResume = resumeCUDRequestDto.createResume(user, subCats);
-            resumeService.update(id, newResume);
+            resumeService.update(id, newResume, thumbnail);
         } else {
             throw new AuthorizationServiceException("해당 글을 수정할 권한이 없습니다.");
         }

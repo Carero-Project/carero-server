@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Slf4j
@@ -70,7 +71,7 @@ public class FileStorageService {
 
     // 확장자를 떼냄
     private String extractExt(String originalFilename) {
-        if(originalFilename != null){
+        if (originalFilename != null) {
             int pos = originalFilename.lastIndexOf(".");
             return originalFilename.substring(pos + 1);
         }
@@ -78,22 +79,21 @@ public class FileStorageService {
         return null;
     }
 
-    public void deleteByFileNames(List<String> filename){
-        filename.forEach(name -> deleteByFileName(name));
+    public void deleteByFileNames(List<String> filename) {
+        filename.forEach(this::deleteByFileName);
     }
 
     public void deleteByFileName(String filename) {
         File file = new File(getFullPath(filename));
 
-        if(file.exists()){
-            if(file.delete()){
-                log.info("파일 삭제 : "+ filename);
-            }else{
-                log.warn("파일 삭제 실패 : " +filename);
+        if (file.exists()) {
+            if (file.delete()) {
+                log.info("파일 삭제 : " + filename);
+            } else {
+                log.warn("파일 삭제 실패 : " + filename);
                 throw new FileDeleteException();
             }
-        }
-        else{
+        } else {
             log.warn("파일이 존재하지않습니다.");
         }
 

@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
-@Api(tags = {"Resume"})
 @RequestMapping("/resumes")
 @RestController
 public class ResumeApiController {
@@ -39,29 +38,23 @@ public class ResumeApiController {
     private final ResponseService responseService;
     private final FileStorageService storageService;
 
-    @ApiOperation(value = "이력서 상세조회", notes = "이력서 하나를 조회한다.")
     @GetMapping("/{id}")
-    public RestResponse readResume(
-            @PathVariable("id") Long id
-    ) {
+    public RestResponse readResume(@PathVariable("id") Long id) {
         Resume resume = resumeService.findById(id);
 
         return responseService.getSingleResponse(new ResumeReadDto(resume));
     }
 
-    @ApiOperation(value = "이력서 페이지 조회", notes = "한 페이지 단위의 이력서를 조회한다.")
     @GetMapping
     public RestResponse readResumes(
-            @ApiParam(value = "조회할 페이지") @RequestParam(value = "page", defaultValue = "0") int page,
-            @ApiParam(value = "한 페이지 당 보여질 개수") @RequestParam(value = "limit", defaultValue = "8") int limit
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "8") int limit
     ) {
         List<ResumePageDto> resumes = resumeService.findByPage(page, limit);
         long count = resumeService.countAll();
         return responseService.getPageResponse(count, page, resumes);
     }
 
-
-    @ApiOperation(value = "이력서 수정", notes = "이력서를 수정한다.")
     @PutMapping("/{id}")
     public RestResponse updateResume(
             @PathVariable("id") Long id,
@@ -86,10 +79,8 @@ public class ResumeApiController {
 
     }
 
-    @ApiOperation(value = "이력서 삭제", notes = "이력서를 삭제한다.")
     @DeleteMapping("/{id}")
-    public RestResponse deleteResume(
-            @PathVariable("id") Long id) {
+    public RestResponse deleteResume(@PathVariable("id") Long id) {
 
         User user = userService.getMyUser()
                 .orElseThrow(MyUserNotFoundException::new);
@@ -105,10 +96,11 @@ public class ResumeApiController {
     }
 
 //    파일 업로드 + Resume 작성
-    @ApiOperation(value = "이력서 작성", notes = "이력서를 작성한다.")
     @PostMapping
-    public RestResponse createResume(@Valid @RequestPart("resume") ResumeCUDRequestDto resumeDto,
-                                 @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail){
+    public RestResponse createResume(
+            @Valid @RequestPart("resume") ResumeCUDRequestDto resumeDto,
+            @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
+    ){
         User user = userService.getMyUser()
                 .orElseThrow(MyUserNotFoundException::new);
 

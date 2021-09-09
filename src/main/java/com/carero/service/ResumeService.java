@@ -1,12 +1,12 @@
 package com.carero.service;
 
-import com.carero.advice.exception.CertNumException;
 import com.carero.advice.exception.NoSuchResumeException;
 import com.carero.advice.exception.NoSuchZzimException;
 import com.carero.domain.*;
 import com.carero.domain.ResumeZzim;
 import com.carero.domain.cat.SubCategory;
 import com.carero.domain.resume.Resume;
+import com.carero.domain.resume.ResumeFile;
 import com.carero.domain.resume.ResumeSubCat;
 import com.carero.domain.user.User;
 import com.carero.dto.SubCategoryCreateDto;
@@ -40,39 +40,56 @@ public class ResumeService {
     private final ResumeFileRepository resumeFileRepository;
 
     @Transactional
-    public Long create(Resume resume){
+    public Long create(Resume resume) {
         resumeRepository.save(resume);
         return resume.getId();
     }
 
     @Transactional
-    public Long create(User user, ResumeCUDRequestDto resumeDto, MultipartFile thumbnail){
+    public Long create(User user, ResumeCUDRequestDto resumeDto, MultipartFile thumbnail) {
         // resume 생성 저장
         List<SubCategory> subCats = getSubCategories(resumeDto);
 
         Resume resume = resumeDto.createResume(user, subCats);
-        resumeRepository.save(resume);
+        ResumeFile thumbResumeFile = saveResumeFile(thumbnail, FileDescType.THUMBNAIL);
+        if( thumbResumeFile != null){
+            resume.addFile(thumbResumeFile);
+        }
 
-        saveResumeFile(resume, thumbnail,FileDescType.THUMBNAIL);
+        resumeRepository.save(resume);
 
         return resume.getId();
 
     }
 
-
-//    자격증 외 Resume 관련 파일을 서버에 저장하고 DB에도 저장
-    private void saveResumeFile(Resume resume, MultipartFile file, FileDescType descType) {
+    //    자격증 외 Resume 관련 파일을 서버에 저장하고 DB에도 저장
+    private ResumeFile saveResumeFile(MultipartFile file, FileDescType descType) {
         if (file != null) {
             UploadFile crimeFile = fileStorageService.storeFile(file);
 //            fileRepository.save(crimeFile);
-            resumeFileRepository.save(new ResumeFile(resume, crimeFile, descType));
+            return new ResumeFile(crimeFile, descType);
         }
+        return null;
     }
 
     @Transactional
     public void deleteById(Long id) {
-        resumeRepository.deleteById(id);
+        // 만약 ResumeFile로 서버에 저장된 파일이 존재한다면? -> 삭제해주는 작업 필요 Done
+        Resume targetResume = resumeRepository.findById(id).orElseThrow(NoSuchResumeException::new);
+        List<ResumeFile> resumeFiles = targetResume.getResumeFile();
+        List<String> fileNames = resumeFiles.stream()
+                .map(resumeFile -> resumeFile.getFile().getFileName())
+                .collect(Collectors.toList());
 
+        fileStorageService.deleteByFileNames(fileNames);
+
+        // 누군가에게 zzim이 되어있다면? DONE
+        List<ResumeZzim> zzimIncludingTarget = resumeZzimRepository.findAllByResume(targetResume);
+        resumeZzimRepository.deleteAll(zzimIncludingTarget);
+
+        // 누군가와 Matching이 되어있다면? TODO
+
+        resumeRepository.deleteById(id);
     }
 
     @Transactional
@@ -91,7 +108,7 @@ public class ResumeService {
         // cats 테이블에 업데이트
         origin.getSubCats().clear();
         List<ResumeSubCat> cats = newResume.getSubCats();
-        for (ResumeSubCat cat: cats) {
+        for (ResumeSubCat cat : cats) {
             origin.addCat(cat);
         }
 
@@ -107,7 +124,7 @@ public class ResumeService {
         List<Resume> resumes = resumeRepository.findByPage(pageable);
 
         List<ResumePageDto> resumeDtos = resumes.stream()
-                .map(r -> new ResumePageDto(r))
+                .map(ResumePageDto::new)
                 .collect(Collectors.toList());
 
         return resumeDtos;
@@ -118,19 +135,19 @@ public class ResumeService {
     }
 
     @Transactional
-    public Long zzim(User user, Resume resume){
+    public Long zzim(User user, Resume resume) {
         ResumeZzim resumeZzim = new ResumeZzim(user, resume);
         resumeZzimRepository.save(resumeZzim);
         return resumeZzim.getId();
     }
 
     @Transactional
-    public void deleteZzim(Long zzimId){
+    public void deleteZzim(Long zzimId) {
         ResumeZzim resumeZzim = resumeZzimRepository.findById(zzimId).orElseThrow(NoSuchZzimException::new);
         resumeZzimRepository.delete(resumeZzim);
     }
 
-    public ResumeZzim findZzimById(Long zzimId){
+    public ResumeZzim findZzimById(Long zzimId) {
         return resumeZzimRepository.findById(zzimId).orElseThrow(NoSuchZzimException::new);
     }
 

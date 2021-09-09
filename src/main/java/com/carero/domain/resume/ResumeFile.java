@@ -1,5 +1,7 @@
-package com.carero.domain;
+package com.carero.domain.resume;
 
+import com.carero.domain.FileDescType;
+import com.carero.domain.UploadFile;
 import com.carero.domain.resume.Resume;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,9 +29,13 @@ public class ResumeFile {
     @Column(name = "file_desc")
     private FileDescType desc;
 
-    public ResumeFile(Resume resume, UploadFile file, FileDescType desc) {
-        this.resume = resume;
+    public ResumeFile(UploadFile file, FileDescType desc){
+        this.resume = null;
         this.file = file;
         this.desc = desc;
+    }
+
+    public void connectResume(Resume resume){
+        this.resume = resume;
     }
 }

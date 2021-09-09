@@ -17,7 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Resume {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "reusme_id")
     private Long id;
 
@@ -65,16 +66,19 @@ public class Resume {
     @Column(columnDefinition = "TEXT")
     private String detailInfo;
 
-    public void changeNation(String nation){
+    @OneToMany(mappedBy = "resume", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ResumeFile> resumeFile = new ArrayList<>();
+
+    public void changeNation(String nation) {
         this.nation = nation;
     }
 
-    public void changeIsParent(Boolean isParent){
+    public void changeIsParent(Boolean isParent) {
         this.isParent = isParent;
     }
 
     public void changeInfo(CertificationInfo certificationInfo, ResumeWantedInfo resumeWantedInfo, String educationInfo,
-                           String careerInfo, String detailInfo){
+                           String careerInfo, String detailInfo) {
         this.certificationInfo = certificationInfo;
         this.resumeWantedInfo = resumeWantedInfo;
         this.educationInfo = educationInfo;
@@ -115,15 +119,21 @@ public class Resume {
         this.title = title;
     }
 
-    public void updateModifiedDate(){
+    public void updateModifiedDate() {
         this.modifiedDate = LocalDateTime.now();
     }
+
     public void changeContactTime(String contactTime) {
         this.contactTime = contactTime;
     }
 
-    public void addCat(ResumeSubCat subCat){
+    public void addCat(ResumeSubCat subCat) {
         this.getSubCats().add(subCat);
         subCat.connectRecruit(this);
+    }
+
+    public void addFile(ResumeFile resumeFile){
+        this.resumeFile.add(resumeFile);
+        resumeFile.connectResume(this);
     }
 }

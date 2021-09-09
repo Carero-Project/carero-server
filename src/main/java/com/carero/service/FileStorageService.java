@@ -1,5 +1,6 @@
 package com.carero.service;
 
+import com.carero.advice.exception.FileDeleteException;
 import com.carero.advice.exception.FileStoreException;
 import com.carero.domain.UploadFile;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,4 +78,24 @@ public class FileStorageService {
         return null;
     }
 
+    public void deleteByFileNames(List<String> filename){
+        filename.forEach(name -> deleteByFileName(name));
+    }
+
+    public void deleteByFileName(String filename) {
+        File file = new File(getFullPath(filename));
+
+        if(file.exists()){
+            if(file.delete()){
+                log.info("파일 삭제 : "+ filename);
+            }else{
+                log.warn("파일 삭제 실패 : " +filename);
+                throw new FileDeleteException();
+            }
+        }
+        else{
+            log.warn("파일이 존재하지않습니다.");
+        }
+
+    }
 }

@@ -5,6 +5,7 @@ import com.carero.domain.recruit.*;
 import com.carero.domain.user.User;
 import com.carero.dto.SubCategoryCreateDto;
 import com.carero.dto.recruit.*;
+import com.carero.repository.RecruitRepository;
 import com.carero.service.RecruitService;
 import com.carero.service.UserService;
 import org.junit.jupiter.api.*;
@@ -41,10 +42,13 @@ class RecruitApiControllerTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    RecruitRepository recruitRepository;
+
     @AfterAll
     public void tearDown() throws Exception {
         System.out.println(" ============== 딜리트 ================");
-        recruitService.deleteById(recruitId);
+        recruitRepository.deleteById(recruitId);
         System.out.println(" ============== 유저딜리트 ================");
         userService.delete(testUserId);
     }

@@ -13,9 +13,6 @@ import com.carero.dto.resume.ResumeCUDRequestDto;
 import com.carero.dto.resume.ResumePageDto;
 import com.carero.dto.resume.ResumeReadDto;
 import com.carero.service.*;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AuthorizationServiceException;
@@ -36,7 +33,6 @@ public class ResumeApiController {
     private final ResumeService resumeService;
     private final SubCatService subCatService;
     private final ResponseService responseService;
-    private final FileStorageService storageService;
 
     @GetMapping("/{id}")
     public RestResponse readResume(@PathVariable("id") Long id) {
@@ -58,50 +54,31 @@ public class ResumeApiController {
 
     @PutMapping("/{id}")
     public RestResponse updateResume(
-            @PathVariable("id") Long id,
-            @Valid @RequestPart("resume") ResumeCUDRequestDto resumeCUDRequestDto,
+            @PathVariable("id") Long resumeId,
+            @Valid @RequestPart("resume") ResumeCUDRequestDto resumeDto,
             @RequestPart(name = "thumbnail", required = false) MultipartFile thumbnail // TODO 썸네일 수정작업 필요
     ) {
+        User user = userService.getMyUser().orElseThrow(MyUserNotFoundException::new);
+        resumeService.update(user, resumeId, resumeDto, thumbnail);
 
-        User user = userService.getMyUser()
-                .orElseThrow(MyUserNotFoundException::new);
-        Resume target = resumeService.findById(id);
-
-        if (target.getUser() == user) {
-            List<SubCategory> subCats = getSubCategories(resumeCUDRequestDto);
-
-            Resume newResume = resumeCUDRequestDto.createResume(user, subCats);
-            resumeService.update(id, newResume, thumbnail);
-        } else {
-            throw new AuthorizationServiceException("해당 글을 수정할 권한이 없습니다.");
-        }
-
-        return responseService.getSingleResponse(new ResumeCUDResponseDto(id));
+        return responseService.getSingleResponse(new ResumeCUDResponseDto(resumeId));
 
     }
 
     @DeleteMapping("/{id}")
-    public RestResponse deleteResume(@PathVariable("id") Long id) {
+    public RestResponse deleteResume(@PathVariable("id") Long resumeId) {
+        User user = userService.getMyUser().orElseThrow(MyUserNotFoundException::new);
+        resumeService.delete(user, resumeId);
 
-        User user = userService.getMyUser()
-                .orElseThrow(MyUserNotFoundException::new);
-        Resume target = resumeService.findById(id);
-
-        if (target.getUser() == user) {
-            resumeService.deleteById(id);
-        } else {
-            throw new AuthorizationServiceException("해당 글을 삭제할 권한이 없습니다.");
-        }
-
-        return responseService.getSingleResponse(new ResumeCUDResponseDto(id));
+        return responseService.getSingleResponse(new ResumeCUDResponseDto(resumeId));
     }
 
-//    파일 업로드 + Resume 작성
+    //    파일 업로드 + Resume 작성
     @PostMapping
     public RestResponse createResume(
             @Valid @RequestPart("resume") ResumeCUDRequestDto resumeDto,
             @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
-    ){
+    ) {
         User user = userService.getMyUser()
                 .orElseThrow(MyUserNotFoundException::new);
 

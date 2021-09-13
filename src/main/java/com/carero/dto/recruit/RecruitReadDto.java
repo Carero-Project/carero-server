@@ -16,6 +16,8 @@ public class RecruitReadDto {
     @NotEmpty
     private String title;
 
+    private String thumbnail;
+
     @NotEmpty
     private String username;
 
@@ -58,10 +60,15 @@ public class RecruitReadDto {
         this.modifiedDate = recruit.getModifiedDate();
         this.status = recruit.getStatus();
         this.viewCount = recruit.getViewCount();
+        this.thumbnail = null;
 
         recruit.getSubCats().stream().forEach(c -> c.getSubCategory().getSubCategoryName());
         this.cat = recruit.getSubCats().get(0).getSubCategory().getParentCategory().getCategoryName();
         recruit.getSubCats().stream().forEach(c -> this.subCats.add(c.getSubCategory().getSubCategoryName()));
 
+    }
+
+    public void attachThumbnail(String thumbFileName, String fileBaseUrl) {
+        this.thumbnail = fileBaseUrl + thumbFileName;
     }
 }

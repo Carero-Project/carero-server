@@ -1,18 +1,23 @@
 package com.carero.dto.recruit;
 
+import com.carero.domain.FileDescType;
 import com.carero.domain.recruit.Recruit;
+import com.carero.domain.recruit.RecruitFile;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class RecruitPageDto {
     private Long id;
 
     private String title;
+
+    private String thumbnail;
 
     private String username;
 
@@ -39,7 +44,7 @@ public class RecruitPageDto {
 //    private int rank;
 
 
-    public RecruitPageDto(Recruit recruit) {
+    public RecruitPageDto(Recruit recruit, String fileBaseUrl) {
         this.id = recruit.getId();
         this.title = recruit.getTitle();
         this.username = recruit.getUser().getUsername();
@@ -58,11 +63,24 @@ public class RecruitPageDto {
         this.wage = workInfoDto.getWage();
         this.wageType = workInfoDto.getWageType();
 
+        // 프록시 강제 초기화
+        recruit.getSubCats().forEach(c -> c.getSubCategory().getSubCategoryName());
 
-        recruit.getSubCats().stream().forEach(c -> c.getSubCategory().getSubCategoryName());
+        //카테고리 설정
         this.cat = recruit.getSubCats().get(0).getSubCategory().getParentCategory().getCategoryName();
-        recruit.getSubCats().stream().forEach(c -> this.subCats.add(c.getSubCategory().getSubCategoryName()));
+        recruit.getSubCats().forEach(c -> this.subCats.add(c.getSubCategory().getSubCategoryName()));
 
+        List<RecruitFile> thumbnailRecruitFileList = recruit.getRecruitFiles().stream()
+                .filter(file -> file.getDesc().equals(FileDescType.THUMBNAIL))
+                .collect(Collectors.toList());
+
+        if (thumbnailRecruitFileList.size() > 0) {
+            RecruitFile thumbnailRecruitFile = thumbnailRecruitFileList.get(0);
+            String thumbFileName = thumbnailRecruitFile.getFile().getFileName();
+            this.thumbnail = fileBaseUrl + thumbFileName;
+        }else{
+            this.thumbnail = null;
+        }
 
     }
 }

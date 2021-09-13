@@ -6,6 +6,7 @@ import com.carero.domain.user.User;
 import com.carero.dto.SubCategoryCreateDto;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -13,9 +14,8 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 public class RecruitCUDRequestDto {
-    public RecruitCUDRequestDto() {
-    }
 
     @NotEmpty
     @NotNull

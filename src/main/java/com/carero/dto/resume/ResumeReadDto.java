@@ -54,7 +54,7 @@ public class ResumeReadDto {
         this.thumbnail = null;
     }
 
-    public void attachThumbnail(String thumbnailFileName){
-        this.thumbnail =  "http://localhost:8080/files/"+ thumbnailFileName;
+    public void attachThumbnail(String thumbnailFileName, String fileBaseUrl){
+        this.thumbnail =  fileBaseUrl + thumbnailFileName;
     }
 }

@@ -43,7 +43,7 @@ public class ResumePageDto {
 
     private String workWeek;
 
-    public ResumePageDto(Resume resume) {
+    public ResumePageDto(Resume resume,String fileBaseUrl) {
         this.id = resume.getId();
         this.title = resume.getTitle();
 
@@ -64,9 +64,14 @@ public class ResumePageDto {
 
         this.thumbnail = null;
 
-        resume.getSubCats().stream().forEach(c -> c.getSubCategory().getSubCategoryName());
+        // 강제 초기화
+        resume.getSubCats().forEach(c -> c.getSubCategory().getSubCategoryName());
+
+        // 부모 카테고리 설정
         this.cat = resume.getSubCats().get(0).getSubCategory().getParentCategory().getCategoryName();
-        resume.getSubCats().stream().forEach(c -> this.subCats.add(c.getSubCategory().getSubCategoryName()));
+
+        // 자식 카테고리 설정
+        resume.getSubCats().forEach(c -> this.subCats.add(c.getSubCategory().getSubCategoryName()));
 
         List<ResumeFile> thumbnailResumeFileList = resume.getResumeFiles().stream()
                 .filter(file -> file.getDesc().equals(FileDescType.THUMBNAIL))
@@ -74,7 +79,7 @@ public class ResumePageDto {
         if (thumbnailResumeFileList.size() > 0) {
             ResumeFile thumbnailResumeFile = thumbnailResumeFileList.get(0);
             String thumbFileName = thumbnailResumeFile.getFile().getFileName();
-            attachThumbnail(thumbFileName);
+            this.thumbnail = fileBaseUrl + thumbFileName;
         }else{
             this.thumbnail = null;
         }

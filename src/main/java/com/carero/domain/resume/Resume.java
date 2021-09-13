@@ -104,10 +104,10 @@ public class Resume {
         this.status = false;
         this.viewCount = 0;
 
-        for (SubCategory cat : subCats) {
+        for (SubCategory subCat : subCats) {
             ResumeSubCat resumeSubCat = ResumeSubCat.builder()
                     .resume(this)
-                    .subCategory(cat)
+                    .subCategory(subCat)
                     .build();
             this.subCats.add(resumeSubCat);
         }

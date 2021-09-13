@@ -65,7 +65,7 @@ public class ResumeCUDRequestDto {
 
         ResumeWantedInfo resumeWantedInfo = this.resumeWantedInfo.toEntity();
 
-        Resume resume = Resume.builder()
+        return Resume.builder()
                 .user(user)
                 .subCats(subCats)
                 .certificationInfo(certificationInfo)
@@ -78,7 +78,5 @@ public class ResumeCUDRequestDto {
                 .contactTime(contactTime)
                 .detailInfo(detailInfo)
                 .build();
-
-        return resume;
     }
 }

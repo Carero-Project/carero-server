@@ -19,6 +19,9 @@ repositories {
 }
 
 dependencies {
+    // MariaDB driver
+    compileOnly 'org.mariadb.jdbc:mariadb-java-client'
+
     // 파일업로드용 IOUtils 써서 StreamToByteArray 작업실시위함
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.springframework.boot:spring-boot-starter-mail'

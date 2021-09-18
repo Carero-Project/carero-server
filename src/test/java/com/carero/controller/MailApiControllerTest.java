@@ -52,7 +52,7 @@ class MailApiControllerTest {
 
         MvcResult done = mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Done"))
+                .andExpect(MockMvcResultMatchers.content().string("{\"success\":true,\"code\":200,\"msg\":\"success\"}"))
                 .andReturn();
 
         MockHttpServletRequest request = done.getRequest();
@@ -70,7 +70,7 @@ class MailApiControllerTest {
 
         mockMvc.perform(requestBuilder)
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string("Done"))
+                .andExpect(MockMvcResultMatchers.content().string("{\"success\":true,\"code\":200,\"msg\":\"success\"}"))
                 .andReturn();
 
     }

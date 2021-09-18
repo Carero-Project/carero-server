@@ -1,24 +1,32 @@
 package com.carero.service;
 
+import ch.qos.logback.core.spi.LifeCycle;
 import com.carero.domain.Gender;
 import com.carero.domain.user.User;
 import com.carero.repository.UserRepository;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Commit;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-@Transactional
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+//@Transactional()
 class UserServiceTest {
     @Autowired UserService userService;
     @Autowired
     UserRepository userRepository;
 
+    Long userId;
+
     @Test
+    @Order(1)
     public void 회원가입() throws Exception {
         //given
         String pass = "12345";
@@ -41,13 +49,14 @@ class UserServiceTest {
                 .build();
 
         //when
-        Long userId = userService.signup(user);
+        this.userId =  userService.signup(user);
 
         //then
-        Assertions.assertThat(user).isEqualTo(userService.findById(userId));
+        Assertions.assertThat(userId).isEqualTo(userService.findById(userId).getId());
     }
 
     @Test
+    @Order(2)
     public void 중복처리() throws Exception {
 
         //given
@@ -90,15 +99,18 @@ class UserServiceTest {
 
 
     @Test
+    @Order(3)
     public void 유저삭제() throws Exception {
         //given
 
-        userService.delete(1L);
+        //when
+        System.out.println(userId);
+        userService.delete(userId);
         //when
 
         //then
         assertThrows(IllegalStateException.class, () -> {
-            userService.findById(1L);
+            userService.findById(userId);
         });
 
     }

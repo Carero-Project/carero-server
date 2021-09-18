@@ -1,5 +1,6 @@
 package com.carero.service;
 
+import com.carero.advice.exception.NoSuchUserException;
 import com.carero.advice.exception.SameBeforePasswordException;
 import com.carero.domain.user.User;
 import com.carero.dto.user.UserDto;
@@ -84,6 +85,7 @@ public class UserService {
 
     @Transactional
     public void delete(Long userId) {
-        userRepository.deleteById(userId);
+        User userToDelete = userRepository.findById(userId).orElseThrow(NoSuchUserException::new);
+        userRepository.delete(userToDelete);
     }
 }

@@ -19,6 +19,9 @@ repositories {
 }
 
 dependencies {
+    // MariaDB driver
+    compileOnly 'org.mariadb.jdbc:mariadb-java-client'
+
     // 파일업로드용 IOUtils 써서 StreamToByteArray 작업실시위함
     implementation 'commons-io:commons-io:2.6'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
@@ -43,6 +46,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     // 스프링 시큐리티
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     // jwt 구현 위함
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'

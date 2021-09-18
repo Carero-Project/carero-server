@@ -1,6 +1,8 @@
 package com.carero.domain.resume;
 
 import com.carero.domain.cat.SubCategory;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,9 +19,24 @@ public class ResumeSubCat {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resume_id")
+    @JsonIgnore
     private Resume resume;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sub_category_id")
     private SubCategory subCategory;
+
+    public void connectResume(Resume resume){
+        this.resume = resume;
+    }
+
+    @Builder
+    public ResumeSubCat(Resume resume, SubCategory subCategory) {
+        this.resume = resume;
+        this.subCategory = subCategory;
+    }
+
+    public void connectRecruit(Resume resume) {
+        this.resume = resume;
+    }
 }

@@ -4,6 +4,7 @@ import com.carero.domain.Gender;
 import com.carero.domain.cat.Category;
 import com.carero.domain.cat.SubCategory;
 import com.carero.domain.user.User;
+import com.carero.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ public class InitDB {
     @Transactional
     @RequiredArgsConstructor
     static class InitService {
+        private final UserService userService;
         private final EntityManager em;
 
         public void userInit(){
@@ -35,25 +37,23 @@ public class InitDB {
             String name = "회원A";
             int age = 30;
             Gender gender = Gender.MALE;
-            String email = "kkkkk@naver.com";
+            String nickname = "회원A";
             String tel = "010-8888-8888";
             String city = "전라남도";
             String sigungu = "광주광역시";
-            String eupmyeondong = "무슨동";
 
             User user = User.builder()
                     .password(pass)
                     .username(name)
+                    .nickname(nickname)
                     .age(age)
                     .gender(gender)
-                    .email(email)
                     .tel(tel)
                     .city(city)
                     .sigungu(sigungu)
-                    .eupmyeondong(eupmyeondong)
                     .build();
 
-            em.persist(user);
+            userService.signup(user);
 
         }
         public void catInit(){

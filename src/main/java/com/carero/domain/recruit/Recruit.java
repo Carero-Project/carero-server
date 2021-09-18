@@ -1,7 +1,7 @@
 package com.carero.domain.recruit;
 
-import com.carero.domain.Gender;
 import com.carero.domain.cat.SubCategory;
+import com.carero.domain.resume.ResumeFile;
 import com.carero.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,7 +26,7 @@ public class Recruit {
     private User user;
 
     @OneToMany(mappedBy = "recruit", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecruitSubCat> cats = new ArrayList<>();
+    private List<RecruitSubCat> subCats = new ArrayList<>();
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL ,orphanRemoval = true)
     @JoinColumn(name = "work_info_id")
@@ -59,13 +59,19 @@ public class Recruit {
     @Column(nullable = false, length = 11)
     private int viewCount;
 
+    @OneToMany(mappedBy = "recruit", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RecruitFile> recruitFiles = new ArrayList<>();
+
 
     public void changeInfo(WorkInfo workInfo, TargetInfo targetInfo, WantedInfo wantedInfo,EtcInfo etcInfo){
         this.workInfo = workInfo;
         this.targetInfo = targetInfo;
         this.wantedInfo = wantedInfo;
         this.etcInfo = etcInfo;
-        modifiedDate = LocalDateTime.now();
+    }
+
+    public void updateModifiedDate(){
+        this.modifiedDate = LocalDateTime.now();
     }
 
 
@@ -74,7 +80,7 @@ public class Recruit {
     }
 
     public void addCat(RecruitSubCat subCat){
-        this.getCats().add(subCat);
+        this.getSubCats().add(subCat);
         subCat.connectRecruit(this);
     }
 
@@ -92,14 +98,17 @@ public class Recruit {
         this.status = false;
         this.viewCount = 0;
 
-        for(SubCategory subcat : subCats){
+        for(SubCategory subCat : subCats){
             RecruitSubCat recruitSubCat = RecruitSubCat.builder()
                     .recruit(this)
-                    .subCategory(subcat)
+                    .subCategory(subCat)
                     .build();
-
-            cats.add(recruitSubCat);
+            this.subCats.add(recruitSubCat);
         }
     }
 
+    public void addFile(RecruitFile recruitFile) {
+        this.recruitFiles.add(recruitFile);
+        recruitFile.connectRecruit(this);
+    }
 }

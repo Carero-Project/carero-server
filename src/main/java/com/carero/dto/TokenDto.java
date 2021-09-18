@@ -2,11 +2,11 @@ package com.carero.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-public class ResultPaging<T> {
-    private int totalCount;
-    private int page;
-    private T data;
+@NoArgsConstructor
+public class TokenDto {
+    private String token;
 }

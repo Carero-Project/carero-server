@@ -5,14 +5,12 @@ import com.carero.domain.cat.SubCategory;
 import com.carero.domain.recruit.*;
 import com.carero.domain.user.User;
 import com.carero.repository.SubCatRepository;
-import com.carero.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,17 +29,16 @@ class RecruitServiceTest {
         //given
         User user = User.builder()
                 .password("12345")
-                .username("회원A")
+                .username("회원")
+                .nickname("recruit작성test")
                 .age(30)
                 .gender(Gender.MALE)
-                .email("kkkk@naver.com")
                 .tel("010-7666-6666")
                 .city("전라남도")
                 .sigungu("광주광역시")
-                .eupmyeondong("소소동")
                 .build();
 
-        userService.join(user);
+        userService.signup(user);
         SubCategory subCat1 = subCatRepository.findById(1L);
         SubCategory subCat2 = subCatRepository.findById(2L);
 
@@ -70,16 +67,13 @@ class RecruitServiceTest {
                 .workType("출퇴근")
                 .workStartDate(LocalDate.now())
                 .workTermDate("6개월 이상")
-                .workingStartHour(LocalTime.now())
-                .workingEndHour(LocalTime.now())
-                .wage("일급 50000원")
+                .wageType("일급")
+                .wage("50000")
                 .isCctv(false)
                 .familyInfo("4인 가구")
-                .petInfo("없음")
                 .mainInfo("아이를 돌봐주실 분 구합니다.")
                 .city("전남")
                 .sigungu("목포시")
-                .eupmyeondong("용당동")
                 .build();
 
         EtcInfo etcInfo = EtcInfo.builder()
@@ -101,14 +95,14 @@ class RecruitServiceTest {
 
         Long recruitId = recruitService.create(recruit);
         //when
-        Recruit findRecruit = recruitService.findOne(recruitId);
+        Recruit findRecruit = recruitService.findById(recruitId);
 
         //then
 
         assertThat(findRecruit.getTitle()).isEqualTo(recruit.getTitle());
         assertThat(findRecruit.getUser().getUsername()).isEqualTo(user.getUsername());
         assertThat(findRecruit.getEtcInfo().getInterviewFee()).isEqualTo(etcInfo.getInterviewFee());
-        assertThat(findRecruit.getCats()).isSameAs(recruit.getCats());
+        assertThat(findRecruit.getSubCats()).isSameAs(recruit.getSubCats());
 
 
     }

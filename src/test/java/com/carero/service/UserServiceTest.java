@@ -22,32 +22,29 @@ class UserServiceTest {
     public void 회원가입() throws Exception {
         //given
         String pass = "12345";
-        String name = "회원A";
+        String name = "회원가입test";
         int age = 30;
         Gender gender = Gender.MALE;
-        String email = "kkkkk@naver.com";
         String tel = "010-8888-8888";
         String city = "전라남도";
         String sigungu = "광주광역시";
-        String eupmyeondong = "무슨동";
 
         User user = User.builder()
                 .password(pass)
                 .username(name)
+                .nickname("회원A")
                 .age(age)
                 .gender(gender)
-                .email(email)
                 .tel(tel)
                 .city(city)
                 .sigungu(sigungu)
-                .eupmyeondong(eupmyeondong)
                 .build();
 
         //when
-        Long userId = userService.join(user);
+        Long userId = userService.signup(user);
 
         //then
-        Assertions.assertThat(user).isEqualTo(userService.findOne(userId));
+        Assertions.assertThat(user).isEqualTo(userService.findById(userId));
     }
 
     @Test
@@ -55,43 +52,39 @@ class UserServiceTest {
 
         //given
         String pass = "12345";
-        String name = "회원A";
+        String name = "중복처리test";
         int age = 30;
         Gender gender = Gender.MALE;
-        String email = "kkkkk@naver.com";
         String tel = "010-8888-8888";
         String city = "전라남도";
         String sigungu = "광주광역시";
-        String eupmyeondong = "무슨동";
 
         User userA = User.builder()
                 .password(pass)
                 .username(name)
+                .nickname("회원A")
                 .age(age)
                 .gender(gender)
-                .email(email)
                 .tel(tel)
                 .city(city)
                 .sigungu(sigungu)
-                .eupmyeondong(eupmyeondong)
                 .build();
 
         User userB = User.builder()
                 .password(pass)
                 .username(name)
+                .nickname("회원A")
                 .age(age)
                 .gender(gender)
-                .email(email)
                 .tel(tel)
                 .city(city)
                 .sigungu(sigungu)
-                .eupmyeondong(eupmyeondong)
                 .build();
         //when
-        userService.join(userA);
+        userService.signup(userA);
         //then
         assertThrows(IllegalStateException.class, () ->{
-            userService.join(userB);
+            userService.signup(userB);
         });
     }
 
@@ -103,9 +96,10 @@ class UserServiceTest {
         userService.delete(1L);
         //when
 
-        User one = userService.findOne(1L);
         //then
-        Assertions.assertThat(one).isEqualTo(null);
+        assertThrows(IllegalStateException.class, () -> {
+            userService.findById(1L);
+        });
 
     }
 }

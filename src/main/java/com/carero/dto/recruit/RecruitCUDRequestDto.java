@@ -3,48 +3,45 @@ package com.carero.dto.recruit;
 import com.carero.domain.cat.SubCategory;
 import com.carero.domain.recruit.*;
 import com.carero.domain.user.User;
+import com.carero.dto.SubCategoryCreateDto;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Data
-public class RecruitCreateUpdateDto {
-    public RecruitCreateUpdateDto() {
-    }
+@NoArgsConstructor
+public class RecruitCUDRequestDto {
 
     @NotEmpty
-    private Long userId;
-
-    @NotEmpty
+    @NotNull
     private String title;
 
     @NotEmpty
+    @NotNull
     private List<SubCategoryCreateDto> cats;
 
     // WorkInfo
-    @NotEmpty
-    WorkInfoDto workInfo;
+    @Valid WorkInfoDto workInfo;
 
     // TargetInfo
-    @NotEmpty
-    TargetInfoDto targetInfo;
+    @Valid TargetInfoDto targetInfo;
 
     // WantedInfo
-    @NotEmpty
-    WantedInfoDto wantedInfo;
+    @Valid WantedInfoDto wantedInfo;
 
     // EtcInfo
-    @NotEmpty
-    EtcInfoDto etcInfo;
+    @Valid EtcInfoDto etcInfo;
 
     @Builder
-    public RecruitCreateUpdateDto(@NotEmpty Long userId, @NotEmpty String title,
-                                  @NotEmpty List<SubCategoryCreateDto> cats, @NotEmpty WorkInfoDto workInfo,
-                                  @NotEmpty TargetInfoDto targetInfo, @NotEmpty WantedInfoDto wantedInfo,
-                                  @NotEmpty EtcInfoDto etcInfo) {
-        this.userId = userId;
+    public RecruitCUDRequestDto(@NotEmpty String title,
+                                @NotEmpty List<SubCategoryCreateDto> cats, @NotEmpty WorkInfoDto workInfo,
+                                @NotEmpty TargetInfoDto targetInfo, @NotEmpty WantedInfoDto wantedInfo,
+                                @NotEmpty EtcInfoDto etcInfo) {
         this.title = title;
         this.cats = cats;
         this.workInfo = workInfo;
@@ -55,7 +52,7 @@ public class RecruitCreateUpdateDto {
 
 
 
-    public Recruit toEntity(User user, List<SubCategory> subCats) {
+    public Recruit createRecruit(User user, List<SubCategory> subCats) {
         WorkInfo workInfo = this.workInfo.toEntity();
 
         TargetInfo targetInfo = this.targetInfo.toEntity();
@@ -64,7 +61,7 @@ public class RecruitCreateUpdateDto {
 
         EtcInfo etcInfo = this.etcInfo.toEntity();
 
-        Recruit recruit = Recruit.builder()
+        return Recruit.builder()
                 .user(user)
                 .title(title)
                 .etcInfo(etcInfo)
@@ -73,7 +70,5 @@ public class RecruitCreateUpdateDto {
                 .workInfo(workInfo)
                 .subCats(subCats)
                 .build();
-
-        return recruit;
     }
 }

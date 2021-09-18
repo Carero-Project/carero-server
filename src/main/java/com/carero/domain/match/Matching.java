@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Match {
+public class Matching {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "match_id")
     private Long id;
@@ -28,7 +28,7 @@ public class Match {
     private Boolean isPaid;
 
     @Column(nullable = false)
-    private Boolean status;
+    private Boolean matchStatus;
 
     @Column(nullable = false)
     private LocalDateTime matchDate;

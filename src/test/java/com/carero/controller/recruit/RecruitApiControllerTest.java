@@ -1,9 +1,11 @@
-package com.carero.api.recruit;
+package com.carero.controller.recruit;
 
 import com.carero.domain.Gender;
 import com.carero.domain.recruit.*;
 import com.carero.domain.user.User;
+import com.carero.dto.SubCategoryCreateDto;
 import com.carero.dto.recruit.*;
+import com.carero.repository.RecruitRepository;
 import com.carero.service.RecruitService;
 import com.carero.service.UserService;
 import org.junit.jupiter.api.*;
@@ -17,7 +19,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,42 +42,43 @@ class RecruitApiControllerTest {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    RecruitRepository recruitRepository;
+
     @AfterAll
     public void tearDown() throws Exception {
         System.out.println(" ============== 딜리트 ================");
-        recruitService.deleteAll();
+        recruitRepository.deleteById(recruitId);
         System.out.println(" ============== 유저딜리트 ================");
         userService.delete(testUserId);
     }
 
     private Long testUserId;
+    private Long recruitId;
 
     @BeforeAll
     public void initDB() {
         String pass = "1234512312";
         String name = "test";
+        String nickname = "test1";
         int age = 30;
         Gender gender = Gender.MALE;
-        String email = "kkkkk@naver.com";
         String tel = "010-7777-7777";
         String city = "전라남도";
         String sigungu = "test시";
-        String eupmyeondong = "무슨동";
 
         User user = User.builder()
                 .password(pass)
                 .username(name)
+                .nickname(nickname)
                 .age(age)
                 .gender(gender)
-                .email(email)
                 .tel(tel)
                 .city(city)
                 .sigungu(sigungu)
-                .eupmyeondong(eupmyeondong)
                 .build();
 
-        userService.join(user);
-        testUserId = user.getId();
+        testUserId = userService.signup(user);
     }
 
     @Test
@@ -103,16 +105,13 @@ class RecruitApiControllerTest {
                 .workType("출퇴근")
                 .workStartDate(LocalDate.now())
                 .workTermDate("6개월 이상")
-                .workingStartHour(LocalTime.now())
-                .workingEndHour(LocalTime.now())
-                .wage("일급 50000원")
+                .wageType("월급")
+                .wage("1500000")
                 .isCctv(false)
                 .familyInfo("4인 가구")
-                .petInfo("없음")
                 .mainInfo("아이를 돌봐주실 분 구합니다.")
                 .city("전남")
                 .sigungu("목포시")
-                .eupmyeondong("용당동")
                 .build();
 
         EtcInfoDto etcInfo = EtcInfoDto.builder()
@@ -127,9 +126,8 @@ class RecruitApiControllerTest {
         cats.add(new SubCategoryCreateDto(2L));
 
         String title = "케어하실분 구합니다.";
-        RecruitCreateUpdateDto recruitPostDto = RecruitCreateUpdateDto.builder()
+        RecruitCUDRequestDto recruitPostDto = RecruitCUDRequestDto.builder()
                 .title(title)
-                .userId(testUserId)
                 .cats(cats)
                 .workInfo(workInfo)
                 .targetInfo(targetInfo)
@@ -145,13 +143,16 @@ class RecruitApiControllerTest {
 
         //then
 
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(responseEntity.getBody().getId()).isGreaterThan(0L);
 
         List<Recruit> all = recruitService.findAll();
         assertThat(all.get(0).getTitle()).isEqualTo(title);
         assertThat(all.get(0).getEtcInfo().getInterviewFee()).isEqualTo(etcInfo.getInterviewFee());
         assertThat(all.get(0).getEtcInfo().getIsInsurance()).isEqualTo(etcInfo.getIsInsurance());
+
+        recruitId = all.get(0).getId();
+
 
     }
 }

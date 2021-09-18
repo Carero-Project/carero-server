@@ -1,10 +1,10 @@
 package com.carero.domain.user;
 
 import com.carero.domain.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,8 +20,11 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(length = 15, nullable = false)
+    @Column(nullable = false)
     private String username;
+
+    @Column(nullable = false)
+    private String nickname;
 
     @Column(nullable = false)
     private int age;
@@ -29,9 +32,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;
-
-    @Column(nullable = false)
-    private String email;
 
     @Column(nullable = false)
     private String tel;
@@ -43,23 +43,35 @@ public class User {
     private String sigungu;
 
     @Column(nullable = false)
-    private String eupmyeondong;
-
-    @Column(nullable = false)
     private LocalDateTime joinedDate;
 
+    @JsonIgnore
+    @Column(name = "activated")
+    private boolean activated;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Authority authority;
+
+
+
     @Builder
-    public User(String password, String username, int age, Gender gender,
-                String email, String tel, String city, String sigungu, String eupmyeondong){
+    public User(String password, String username,String nickname, int age, Gender gender,
+                String tel, String city, String sigungu){
         this.password = password;
         this.username = username;
+        this.nickname = nickname;
         this.age = age;
         this.gender = gender;
-        this.email = email;
         this.tel = tel;
         this.city = city;
         this.sigungu = sigungu;
-        this.eupmyeondong = eupmyeondong;
         this.joinedDate = LocalDateTime.now();
+        this.authority = Authority.ROLE_USER;
+        this.activated = true;
+    }
+
+    public void setEncodedPassword(String encodedPassword){
+        this.password = encodedPassword;
     }
 }

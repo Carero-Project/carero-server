@@ -5,15 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 public class TargetInfoDto {
     public TargetInfoDto() {
     }
 
-    @NotEmpty
+    @NotNull
     private int targetAge;
-    @NotEmpty
+    @NotNull
     private String remark;
     private String carePlace;
     private String species;

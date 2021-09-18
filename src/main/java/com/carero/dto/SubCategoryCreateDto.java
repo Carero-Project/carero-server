@@ -1,13 +1,12 @@
-package com.carero.dto.recruit;
+package com.carero.dto;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class SubCategoryCreateDto {
     private Long id;
-
-    public SubCategoryCreateDto() {
-    }
 
     public SubCategoryCreateDto(Long id) {
         this.id = id;

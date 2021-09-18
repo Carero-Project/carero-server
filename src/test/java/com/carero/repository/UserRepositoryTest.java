@@ -28,22 +28,19 @@ class UserRepositoryTest {
         String name = "회원A";
         int age = 30;
         Gender gender = Gender.MALE;
-        String email = "kkkkk@naver.com";
         String tel = "010-8888-8888";
         String city = "전라남도";
         String sigungu = "광주광역시";
-        String eupmyeondong = "무슨동";
 
         userRepository.save(User.builder()
                 .password(pass)
                 .username(name)
+                .nickname("회원A")
                 .age(age)
                 .gender(gender)
-                .email(email)
                 .tel(tel)
                 .city(city)
                 .sigungu(sigungu)
-                .eupmyeondong(eupmyeondong)
                 .build());
 
         //when
@@ -55,15 +52,10 @@ class UserRepositoryTest {
         assertThat(user.getAge()).isEqualTo(age);
         assertThat(user.getUsername()).isEqualTo(name);
         assertThat(user.getGender()).isEqualTo(gender);
-        assertThat(user.getEmail()).isEqualTo(email);
         assertThat(user.getTel()).isEqualTo(tel);
         assertThat(user.getCity()).isEqualTo(city);
         assertThat(user.getSigungu()).isEqualTo(sigungu);
-        assertThat(user.getEupmyeondong()).isEqualTo(eupmyeondong);
         System.out.println("생성날짜: " + user.getJoinedDate());
-
-        LocalDateTime joinedDate = user.getJoinedDate();
-        Month month = joinedDate.getMonth();
     }
 
 }

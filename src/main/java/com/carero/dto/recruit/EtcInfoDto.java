@@ -5,15 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 public class EtcInfoDto {
     public EtcInfoDto() {
     }
 
-    @NotEmpty
+    @NotNull
     private Boolean isContract;
-    @NotEmpty
+    @NotNull
     private Boolean isInsurance;
     private String submitDocument;
     private String interviewFee;

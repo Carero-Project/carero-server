@@ -2,6 +2,7 @@ package com.carero.service;
 
 import com.carero.advice.exception.NoSuchResumeException;
 import com.carero.advice.exception.NoSuchZzimException;
+import com.carero.advice.exception.NotMultiZzimException;
 import com.carero.domain.*;
 import com.carero.domain.ResumeZzim;
 import com.carero.domain.cat.SubCategory;
@@ -11,7 +12,6 @@ import com.carero.domain.resume.ResumeSubCat;
 import com.carero.domain.user.User;
 import com.carero.dto.SubCategoryCreateDto;
 import com.carero.dto.resume.ResumeCUDRequestDto;
-import com.carero.dto.resume.ResumePageDto;
 import com.carero.dto.resume.ResumeReadDto;
 import com.carero.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -153,15 +154,12 @@ public class ResumeService {
 
         List<ResumeReadDto> resumeReadDtos = new ArrayList<>();
 
-        resumes.stream().forEach(resume -> {
+        resumes.forEach(resume -> {
             ResumeReadDto resumeReadDto = new ResumeReadDto(resume);
 
-            List<ResumeFile> thumbnailResumeFileList = resume.getResumeFiles().stream()
-                    .filter(file -> file.getDesc().equals(FileDescType.THUMBNAIL))
-                    .collect(Collectors.toList());
-            if (thumbnailResumeFileList.size() > 0) {
-                ResumeFile thumbnailResumeFile = thumbnailResumeFileList.get(0);
-                String thumbFileName = thumbnailResumeFile.getFile().getFileName();
+            ResumeFile thumbnailFile = getThumbFilesInResumeFile(resume);
+            if (thumbnailFile != null) {
+                String thumbFileName = thumbnailFile.getFile().getFileName();
 
                 String thumbFileUrl = fileStorageService.getUrl(thumbFileName);
                 resumeReadDto.attachThumbnail(thumbFileUrl);
@@ -178,20 +176,20 @@ public class ResumeService {
     }
 
     @Transactional
-    public Long zzim(User user, Resume resume) {
-        ResumeZzim resumeZzim = new ResumeZzim(user, resume);
-        resumeZzimRepository.save(resumeZzim);
-        return resumeZzim.getId();
+    public void zzim(User user, Resume resume) {
+        ResumeZzim savedZzim = resumeZzimRepository.findByUserAndResume(user, resume).orElse(null);
+        if (savedZzim == null) {
+            ResumeZzim resumeZzim = new ResumeZzim(user, resume);
+            resumeZzimRepository.save(resumeZzim);
+        } else {
+            throw new NotMultiZzimException();
+        }
     }
 
     @Transactional
-    public void deleteZzim(Long zzimId) {
-        ResumeZzim resumeZzim = resumeZzimRepository.findById(zzimId).orElseThrow(NoSuchZzimException::new);
+    public void deleteZzim(User user, Resume resume) {
+        ResumeZzim resumeZzim = resumeZzimRepository.findByUserAndResume(user, resume).orElseThrow(NoSuchZzimException::new);
         resumeZzimRepository.delete(resumeZzim);
-    }
-
-    public ResumeZzim findZzimById(Long zzimId) {
-        return resumeZzimRepository.findById(zzimId).orElseThrow(NoSuchZzimException::new);
     }
 
     private List<SubCategory> getSubCategories(List<SubCategoryCreateDto> catIds) {
@@ -209,17 +207,20 @@ public class ResumeService {
         Resume resume = resumeRepository.findByIdWithThumbnail(id).orElseThrow(NoSuchResumeException::new);
 
         ResumeReadDto resumeReadDto = new ResumeReadDto(resume);
-        List<ResumeFile> thumbnailResumeFileList = resume.getResumeFiles().stream()
-                .filter(file -> file.getDesc().equals(FileDescType.THUMBNAIL))
-                .collect(Collectors.toList());
-        if (thumbnailResumeFileList.size() > 0) {
-            ResumeFile thumbnailResumeFile = thumbnailResumeFileList.get(0);
-            String thumbFileName = thumbnailResumeFile.getFile().getFileName();
+        ResumeFile thumbnailFile = getThumbFilesInResumeFile(resume);
+        if (thumbnailFile != null) {
+            String thumbFileName = thumbnailFile.getFile().getFileName();
 
             String thumbFileUrl = fileStorageService.getUrl(thumbFileName);
             resumeReadDto.attachThumbnail(thumbFileUrl);
         }
 
         return resumeReadDto;
+    }
+
+    private ResumeFile getThumbFilesInResumeFile(Resume resume) {
+        return resume.getResumeFiles().stream()
+                .filter(file -> file.getDesc().equals(FileDescType.THUMBNAIL) && !file.getFile().getDeleted())
+                .findFirst().orElse(null);
     }
 }

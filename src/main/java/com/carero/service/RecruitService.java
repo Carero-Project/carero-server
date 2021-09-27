@@ -2,6 +2,7 @@ package com.carero.service;
 
 import com.carero.advice.exception.NoSuchRecruitException;
 import com.carero.advice.exception.NoSuchZzimException;
+import com.carero.advice.exception.NotMultiZzimException;
 import com.carero.domain.FileDescType;
 import com.carero.domain.RecruitZzim;
 import com.carero.domain.UploadFile;
@@ -157,16 +158,13 @@ public class RecruitService {
 
         List<RecruitReadDto> recruitReadDtos = new ArrayList<>();
 
-        recruits.stream().forEach(recruit -> {
+        recruits.forEach(recruit -> {
             RecruitReadDto recruitReadDto = new RecruitReadDto(recruit);
 
-            List<RecruitFile> thumbnailRecruitFileList = recruit.getRecruitFiles().stream()
-                    .filter(file -> file.getDesc().equals(FileDescType.THUMBNAIL))
-                    .collect(Collectors.toList());
+            RecruitFile thumbnailFile = getThumbFilesInRecruitFile(recruit);
 
-            if (thumbnailRecruitFileList.size() > 0) {
-                RecruitFile thumbnailRecruitFile = thumbnailRecruitFileList.get(0);
-                String thumbFileName = thumbnailRecruitFile.getFile().getFileName();
+            if (thumbnailFile != null) {
+                String thumbFileName = thumbnailFile.getFile().getFileName();
 
                 String thumbFileUrl = fileStorageService.getUrl(thumbFileName);
                 recruitReadDto.attachThumbnail(thumbFileUrl);
@@ -184,20 +182,20 @@ public class RecruitService {
     }
 
     @Transactional
-    public Long zzim(User user, Recruit recruit) {
-        RecruitZzim recruitZzim = new RecruitZzim(user, recruit);
-        recruitZzimRepository.save(recruitZzim);
-        return recruitZzim.getId();
+    public void zzim(User user, Recruit recruit) {
+        RecruitZzim savedZzim = recruitZzimRepository.findByUserAndRecruit(user, recruit).orElse(null);
+        if (savedZzim == null) {
+            RecruitZzim recruitZzim = new RecruitZzim(user, recruit);
+            recruitZzimRepository.save(recruitZzim);
+        } else {
+            throw new NotMultiZzimException();
+        }
     }
 
     @Transactional
-    public void deleteZzim(Long zzimId) {
-        RecruitZzim recruitZzim = recruitZzimRepository.findById(zzimId).orElseThrow(NoSuchZzimException::new);
+    public void deleteZzim(User user, Recruit recruit) {
+        RecruitZzim recruitZzim = recruitZzimRepository.findByUserAndRecruit(user, recruit).orElseThrow(NoSuchZzimException::new);
         recruitZzimRepository.delete(recruitZzim);
-    }
-
-    public RecruitZzim findZzimById(Long zzimId) {
-        return recruitZzimRepository.findById(zzimId).orElseThrow(NoSuchZzimException::new);
     }
 
     private List<SubCategory> getSubCategories(List<SubCategoryCreateDto> catIds) {
@@ -210,20 +208,23 @@ public class RecruitService {
     public RecruitReadDto findByIdWithThumbnail(Long id) {
         Recruit recruit = recruitRepository.findByIdWithFiles(id).orElseThrow(NoSuchRecruitException::new);
 
-        RecruitReadDto resumeReadDto = new RecruitReadDto(recruit);
+        RecruitReadDto recruitReadDto = new RecruitReadDto(recruit);
 
-        List<RecruitFile> thumbnailRecruitFileList = recruit.getRecruitFiles().stream()
-                .filter(file -> file.getDesc().equals(FileDescType.THUMBNAIL))
-                .collect(Collectors.toList());
+        RecruitFile thumbnailFile = getThumbFilesInRecruitFile(recruit);
 
-        if (thumbnailRecruitFileList.size() > 0) {
-            RecruitFile thumbnailRecruitFile = thumbnailRecruitFileList.get(0);
-            String thumbFileName = thumbnailRecruitFile.getFile().getFileName();
+        if (thumbnailFile != null) {
+            String thumbFileName = thumbnailFile.getFile().getFileName();
 
             String thumbFileUrl = fileStorageService.getUrl(thumbFileName);
-            resumeReadDto.attachThumbnail(thumbFileUrl);
+            recruitReadDto.attachThumbnail(thumbFileUrl);
         }
 
-        return resumeReadDto;
+        return recruitReadDto;
+    }
+
+    private RecruitFile getThumbFilesInRecruitFile(Recruit recruit) {
+        return recruit.getRecruitFiles().stream()
+                .filter(file -> file.getDesc().equals(FileDescType.THUMBNAIL) && !file.getFile().getDeleted())
+                .findFirst().orElse(null);
     }
 }

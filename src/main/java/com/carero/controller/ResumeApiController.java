@@ -86,8 +86,8 @@ public class ResumeApiController {
         return responseService.getSingleResponse(result);
     }
 
-    @PostMapping("/zzim")
-    public RestResponse zzim(@RequestBody ZzimDto zzimDto) {
+    @PostMapping("/zzim/{id}")
+    public RestResponse zzim(@PathVariable("id") Long resumeId) {
         User user = userService.getMyUser()
                 .orElseThrow(MyUserNotFoundException::new);
 
@@ -98,17 +98,12 @@ public class ResumeApiController {
     }
 
     @DeleteMapping("/zzim/{id}")
-    public RestResponse deleteZzim(@PathVariable("id") Long zzimId) {
+    public RestResponse deleteZzim(@PathVariable("id") Long resumeId) {
         User user = userService.getMyUser()
                 .orElseThrow(MyUserNotFoundException::new);
 
-        ResumeZzim target = resumeService.findZzimById(zzimId);
-
-        if (target.getUser() == user) {
-            resumeService.deleteZzim(zzimId);
-        } else {
-            throw new AuthorizationServiceException("해당 찜 목록을 삭제할 권한이 없습니다.");
-        }
+        Resume resume = resumeService.findById(resumeId);
+        resumeService.deleteZzim(user, resume);
 
         return responseService.getSuccessResponse();
     }

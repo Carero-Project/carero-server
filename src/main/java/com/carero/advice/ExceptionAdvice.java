@@ -88,6 +88,12 @@ public class ExceptionAdvice {
         return responseService.getFailResponse(-1008, "해당 ID의 찜을 찾을 수 없습니다.");
     }
 
+    @ExceptionHandler(NotMultiZzimException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestResponse notMultiZzimException() {
+        return responseService.getFailResponse(-1009, "한 게시글마다 한 번의 찜만 가능합니다.");
+    }
+
     @ExceptionHandler(MessagingException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public RestResponse messagingException() {

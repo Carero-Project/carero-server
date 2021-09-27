@@ -33,7 +33,6 @@ public class RecruitApiController {
 
     private final RecruitService recruitService;
     private final UserService userService;
-    private final SubCatService subCatService;
     private final ResponseService responseService;
 
     @ApiOperation(value = "채용공고 상세조회", notes = "하나의 채용공고를 조회한다.")
@@ -96,29 +95,24 @@ public class RecruitApiController {
         return responseService.getSingleResponse(resultId);
     }
 
-    @PostMapping("/zzim")
-    public RestResponse zzim(@RequestBody ZzimDto zzimDto) {
+    @PostMapping("/zzim/{id}")
+    public RestResponse zzim(@PathVariable("id") Long recruitId) {
         User user = userService.getMyUser()
                 .orElseThrow(MyUserNotFoundException::new);
 
-        Recruit recruit = recruitService.findById(zzimDto.getId());
+        Recruit recruit = recruitService.findById(recruitId);
         recruitService.zzim(user, recruit);
 
         return responseService.getSuccessResponse();
     }
 
     @DeleteMapping("/zzim/{id}")
-    public RestResponse deleteZzim(@PathVariable("id") Long zzimId) {
+    public RestResponse deleteZzim(@PathVariable("id") Long recruitId) {
         User user = userService.getMyUser()
                 .orElseThrow(MyUserNotFoundException::new);
 
-        RecruitZzim target = recruitService.findZzimById(zzimId);
-
-        if (target.getUser() == user) {
-            recruitService.deleteZzim(zzimId);
-        } else {
-            throw new AuthorizationServiceException("해당 찜 목록을 삭제할 권한이 없습니다.");
-        }
+        Recruit recruit = recruitService.findById(recruitId);
+        recruitService.deleteZzim(user, recruit);
 
         return responseService.getSuccessResponse();
     }

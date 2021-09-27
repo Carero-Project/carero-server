@@ -2,11 +2,9 @@ package com.carero.controller;
 
 import com.carero.advice.exception.MyUserNotFoundException;
 import com.carero.domain.RecruitZzim;
-import com.carero.domain.cat.SubCategory;
 import com.carero.domain.recruit.Recruit;
 import com.carero.domain.user.User;
 import com.carero.dto.ZzimDto;
-import com.carero.dto.recruit.RecruitPageDto;
 import com.carero.dto.recruit.RecruitReadDto;
 import com.carero.dto.recruit.RecruitCUDRequestDto;
 import com.carero.dto.recruit.RecruitCUDResponseDto;
@@ -54,7 +52,7 @@ public class RecruitApiController {
             @ApiParam(value = "조회할 페이지") @RequestParam(value = "page", defaultValue = "0") int page,
             @ApiParam(value = "한 페이지 당 보여질 개수") @RequestParam(value = "limit", defaultValue = "8") int limit
     ) {
-        List<RecruitPageDto> recruits = recruitService.findByPage(page * 8, limit);
+        List<RecruitReadDto> recruits = recruitService.findByPage(page * 8, limit);
         long count = recruitService.countAll();
 
         return responseService.getPageResponse(count, page, recruits);

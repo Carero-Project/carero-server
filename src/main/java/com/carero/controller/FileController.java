@@ -20,7 +20,7 @@ import java.nio.file.Files;
 public class FileController {
     private final FileStorageService fileStorageService;
 
-    @GetMapping("/{fileName}")
+//    @GetMapping("/{fileName}")
     public ResponseEntity<byte[]> getImage(@PathVariable String fileName) throws IOException {
 
         File file = new File(fileStorageService.getFullPath(fileName));

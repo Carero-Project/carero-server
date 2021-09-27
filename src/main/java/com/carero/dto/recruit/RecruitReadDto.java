@@ -68,7 +68,11 @@ public class RecruitReadDto {
 
     }
 
-    public void attachThumbnail(String thumbFileName, String fileBaseUrl) {
+    public void attachThumbnail(String thumbFileUrl){
+        this.thumbnail = thumbFileUrl;
+    }
+
+    public void attachThumbnailByLocal(String thumbFileName, String fileBaseUrl) {
         this.thumbnail = fileBaseUrl + thumbFileName;
     }
 }

@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -146,13 +147,30 @@ public class ResumeService {
 
     }
 
-    public List<ResumePageDto> findByPage(int offset, int limit) {
+    public List<ResumeReadDto> findByPage(int offset, int limit) {
         Pageable pageable = PageRequest.of(offset, limit);
         List<Resume> resumes = resumeRepository.findByPage(pageable);
 
-        return resumes.stream()
-                .map(resume -> new ResumePageDto(resume, fileBaseUrl))
-                .collect(Collectors.toList());
+        List<ResumeReadDto> resumeReadDtos = new ArrayList<>();
+
+        resumes.stream().forEach(resume -> {
+            ResumeReadDto resumeReadDto = new ResumeReadDto(resume);
+
+            List<ResumeFile> thumbnailResumeFileList = resume.getResumeFiles().stream()
+                    .filter(file -> file.getDesc().equals(FileDescType.THUMBNAIL))
+                    .collect(Collectors.toList());
+            if (thumbnailResumeFileList.size() > 0) {
+                ResumeFile thumbnailResumeFile = thumbnailResumeFileList.get(0);
+                String thumbFileName = thumbnailResumeFile.getFile().getFileName();
+
+                String thumbFileUrl = fileStorageService.getUrl(thumbFileName);
+                resumeReadDto.attachThumbnail(thumbFileUrl);
+            }
+
+            resumeReadDtos.add(resumeReadDto);
+        });
+
+        return resumeReadDtos;
     }
 
     public long countAll() {
@@ -197,7 +215,9 @@ public class ResumeService {
         if (thumbnailResumeFileList.size() > 0) {
             ResumeFile thumbnailResumeFile = thumbnailResumeFileList.get(0);
             String thumbFileName = thumbnailResumeFile.getFile().getFileName();
-            resumeReadDto.attachThumbnail(thumbFileName, fileBaseUrl);
+
+            String thumbFileUrl = fileStorageService.getUrl(thumbFileName);
+            resumeReadDto.attachThumbnail(thumbFileUrl);
         }
 
         return resumeReadDto;

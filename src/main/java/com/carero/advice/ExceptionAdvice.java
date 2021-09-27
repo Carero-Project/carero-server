@@ -21,7 +21,7 @@ public class ExceptionAdvice {
     private final ResponseService responseService;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public RestResponse processValidationError(MethodArgumentNotValidException ex) {
         StringBuilder errorMessage = new StringBuilder("유효하지 않은 값이 들어왔습니다. :: ");
         for (ObjectError error : ex.getAllErrors()) {

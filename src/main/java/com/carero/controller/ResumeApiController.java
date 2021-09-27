@@ -47,7 +47,7 @@ public class ResumeApiController {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "limit", defaultValue = "8") int limit
     ) {
-        List<ResumePageDto> resumes = resumeService.findByPage(page, limit);
+        List<ResumeReadDto> resumes = resumeService.findByPage(page, limit);
         long count = resumeService.countAll();
         return responseService.getPageResponse(count, page, resumes);
     }

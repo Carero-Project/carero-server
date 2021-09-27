@@ -19,8 +19,11 @@ repositories {
 }
 
 dependencies {
+    // AWS S3
+    implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+
     // MariaDB driver
-    compileOnly 'org.mariadb.jdbc:mariadb-java-client'
+    implementation 'org.mariadb.jdbc:mariadb-java-client'
 
     // 파일업로드용 IOUtils 써서 StreamToByteArray 작업실시위함
     implementation 'commons-io:commons-io:2.6'

@@ -73,20 +73,5 @@ public class ResumePageDto {
         // 자식 카테고리 설정
         resume.getSubCats().forEach(c -> this.subCats.add(c.getSubCategory().getSubCategoryName()));
 
-        List<ResumeFile> thumbnailResumeFileList = resume.getResumeFiles().stream()
-                .filter(file -> file.getDesc().equals(FileDescType.THUMBNAIL))
-                .collect(Collectors.toList());
-        if (thumbnailResumeFileList.size() > 0) {
-            ResumeFile thumbnailResumeFile = thumbnailResumeFileList.get(0);
-            String thumbFileName = thumbnailResumeFile.getFile().getFileName();
-            this.thumbnail = fileBaseUrl + thumbFileName;
-        }else{
-            this.thumbnail = null;
-        }
-    }
-
-
-    public void attachThumbnail(String thumbnailFileName){
-        this.thumbnail =  "http://localhost:8080/files/"+ thumbnailFileName;
     }
 }

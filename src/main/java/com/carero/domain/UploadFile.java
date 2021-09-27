@@ -31,6 +31,9 @@ public class UploadFile {
     @Column(nullable = false, name = "created_date")
     private LocalDateTime createdDate;
 
+    @Column(nullable = false)
+    private Boolean deleted;
+
     @Builder
     public UploadFile(String type, Long byteSize, String orgName, String fileName) {
         this.type = type;
@@ -38,6 +41,11 @@ public class UploadFile {
         this.orgName = orgName;
         this.fileName = fileName;
         this.createdDate = LocalDateTime.now();
+        this.deleted = false;
+    }
+
+    public void deleteOn(){
+        this.deleted = true;
     }
 
 }

@@ -21,7 +21,7 @@ public class ExceptionAdvice {
     private final ResponseService responseService;
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public RestResponse processValidationError(MethodArgumentNotValidException ex) {
         StringBuilder errorMessage = new StringBuilder("유효하지 않은 값이 들어왔습니다. :: ");
         for (ObjectError error : ex.getAllErrors()) {
@@ -86,6 +86,12 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public RestResponse noSuchZzimException() {
         return responseService.getFailResponse(-1008, "해당 ID의 찜을 찾을 수 없습니다.");
+    }
+
+    @ExceptionHandler(NotMultiZzimException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public RestResponse notMultiZzimException() {
+        return responseService.getFailResponse(-1009, "한 게시글마다 한 번의 찜만 가능합니다.");
     }
 
     @ExceptionHandler(MessagingException.class)

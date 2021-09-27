@@ -21,7 +21,7 @@ public class ResumeFile {
     @JoinColumn(name = "resume_id")
     private Resume resume;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "file_id")
     private UploadFile file;
 

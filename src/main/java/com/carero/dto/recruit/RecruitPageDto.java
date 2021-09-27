@@ -44,7 +44,7 @@ public class RecruitPageDto {
 //    private int rank;
 
 
-    public RecruitPageDto(Recruit recruit, String fileBaseUrl) {
+    public RecruitPageDto(Recruit recruit) {
         this.id = recruit.getId();
         this.title = recruit.getTitle();
         this.username = recruit.getUser().getUsername();
@@ -76,8 +76,7 @@ public class RecruitPageDto {
 
         if (thumbnailRecruitFileList.size() > 0) {
             RecruitFile thumbnailRecruitFile = thumbnailRecruitFileList.get(0);
-            String thumbFileName = thumbnailRecruitFile.getFile().getFileName();
-            this.thumbnail = fileBaseUrl + thumbFileName;
+            this.thumbnail = thumbnailRecruitFile.getFile().getFileName();
         }else{
             this.thumbnail = null;
         }

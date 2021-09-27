@@ -2,11 +2,9 @@ package com.carero.controller;
 
 import com.carero.advice.exception.MyUserNotFoundException;
 import com.carero.domain.RecruitZzim;
-import com.carero.domain.cat.SubCategory;
 import com.carero.domain.recruit.Recruit;
 import com.carero.domain.user.User;
 import com.carero.dto.ZzimDto;
-import com.carero.dto.recruit.RecruitPageDto;
 import com.carero.dto.recruit.RecruitReadDto;
 import com.carero.dto.recruit.RecruitCUDRequestDto;
 import com.carero.dto.recruit.RecruitCUDResponseDto;
@@ -35,7 +33,6 @@ public class RecruitApiController {
 
     private final RecruitService recruitService;
     private final UserService userService;
-    private final SubCatService subCatService;
     private final ResponseService responseService;
 
     @ApiOperation(value = "채용공고 상세조회", notes = "하나의 채용공고를 조회한다.")
@@ -54,7 +51,7 @@ public class RecruitApiController {
             @ApiParam(value = "조회할 페이지") @RequestParam(value = "page", defaultValue = "0") int page,
             @ApiParam(value = "한 페이지 당 보여질 개수") @RequestParam(value = "limit", defaultValue = "8") int limit
     ) {
-        List<RecruitPageDto> recruits = recruitService.findByPage(page * 8, limit);
+        List<RecruitReadDto> recruits = recruitService.findByPage(page * 8, limit);
         long count = recruitService.countAll();
 
         return responseService.getPageResponse(count, page, recruits);
@@ -98,29 +95,24 @@ public class RecruitApiController {
         return responseService.getSingleResponse(resultId);
     }
 
-    @PostMapping("/zzim")
-    public RestResponse zzim(@RequestBody ZzimDto zzimDto) {
+    @PostMapping("/zzim/{id}")
+    public RestResponse zzim(@PathVariable("id") Long recruitId) {
         User user = userService.getMyUser()
                 .orElseThrow(MyUserNotFoundException::new);
 
-        Recruit recruit = recruitService.findById(zzimDto.getId());
+        Recruit recruit = recruitService.findById(recruitId);
         recruitService.zzim(user, recruit);
 
         return responseService.getSuccessResponse();
     }
 
     @DeleteMapping("/zzim/{id}")
-    public RestResponse deleteZzim(@PathVariable("id") Long zzimId) {
+    public RestResponse deleteZzim(@PathVariable("id") Long recruitId) {
         User user = userService.getMyUser()
                 .orElseThrow(MyUserNotFoundException::new);
 
-        RecruitZzim target = recruitService.findZzimById(zzimId);
-
-        if (target.getUser() == user) {
-            recruitService.deleteZzim(zzimId);
-        } else {
-            throw new AuthorizationServiceException("해당 찜 목록을 삭제할 권한이 없습니다.");
-        }
+        Recruit recruit = recruitService.findById(recruitId);
+        recruitService.deleteZzim(user, recruit);
 
         return responseService.getSuccessResponse();
     }

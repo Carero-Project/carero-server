@@ -54,7 +54,11 @@ public class ResumeReadDto {
         this.thumbnail = null;
     }
 
-    public void attachThumbnail(String thumbnailFileName, String fileBaseUrl){
+    public void attachThumbnail(String thumbFileUrl){
+        this.thumbnail = thumbFileUrl;
+    }
+
+    public void attachThumbnailByLocal(String thumbnailFileName, String fileBaseUrl){
         this.thumbnail =  fileBaseUrl + thumbnailFileName;
     }
 }

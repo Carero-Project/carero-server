@@ -21,7 +21,7 @@ public class RecruitFile {
     @JoinColumn(name = "recruit_id")
     private Recruit recruit;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "file_id")
     private UploadFile file;
 

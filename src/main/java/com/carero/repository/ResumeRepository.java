@@ -4,6 +4,7 @@ import com.carero.domain.resume.Resume;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +27,6 @@ public interface ResumeRepository extends JpaRepository<Resume, Long> {
             " join fetch r.certificationInfo ci" +
             " join fetch r.resumeWantedInfo rwi" +
             " join fetch r.user u" +
-            " where r.id = ?1")
-    Optional<Resume> findByIdWithThumbnail(Long id);
+            " where r.id = :id")
+    Optional<Resume> findByIdWithThumbnail(@Param("id") Long id);
 }

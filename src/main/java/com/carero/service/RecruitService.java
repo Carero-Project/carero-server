@@ -2,6 +2,7 @@ package com.carero.service;
 
 import com.carero.advice.exception.NoSuchRecruitException;
 import com.carero.advice.exception.NoSuchZzimException;
+import com.carero.advice.exception.NotMultiZzimException;
 import com.carero.domain.FileDescType;
 import com.carero.domain.RecruitZzim;
 import com.carero.domain.UploadFile;
@@ -12,7 +13,6 @@ import com.carero.domain.recruit.RecruitSubCat;
 import com.carero.domain.user.User;
 import com.carero.dto.SubCategoryCreateDto;
 import com.carero.dto.recruit.RecruitCUDRequestDto;
-import com.carero.dto.recruit.RecruitPageDto;
 import com.carero.dto.recruit.RecruitReadDto;
 import com.carero.repository.RecruitRepository;
 import com.carero.repository.RecruitZzimRepository;
@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -151,13 +152,28 @@ public class RecruitService {
 
     }
 
-    public List<RecruitPageDto> findByPage(int offset, int limit) {
+    public List<RecruitReadDto> findByPage(int offset, int limit) {
         Pageable pageable = PageRequest.of(offset, limit);
         List<Recruit> recruits = recruitRepository.findByPage(pageable);
 
-        return recruits.stream()
-                .map(r -> new RecruitPageDto(r, fileBaseUrl))
-                .collect(Collectors.toList());
+        List<RecruitReadDto> recruitReadDtos = new ArrayList<>();
+
+        recruits.forEach(recruit -> {
+            RecruitReadDto recruitReadDto = new RecruitReadDto(recruit);
+
+            RecruitFile thumbnailFile = getThumbFilesInRecruitFile(recruit);
+
+            if (thumbnailFile != null) {
+                String thumbFileName = thumbnailFile.getFile().getFileName();
+
+                String thumbFileUrl = fileStorageService.getUrl(thumbFileName);
+                recruitReadDto.attachThumbnail(thumbFileUrl);
+            }
+
+            recruitReadDtos.add(recruitReadDto);
+        });
+
+        return recruitReadDtos;
 
     }
 
@@ -166,20 +182,20 @@ public class RecruitService {
     }
 
     @Transactional
-    public Long zzim(User user, Recruit recruit) {
-        RecruitZzim recruitZzim = new RecruitZzim(user, recruit);
-        recruitZzimRepository.save(recruitZzim);
-        return recruitZzim.getId();
+    public void zzim(User user, Recruit recruit) {
+        RecruitZzim savedZzim = recruitZzimRepository.findByUserAndRecruit(user, recruit).orElse(null);
+        if (savedZzim == null) {
+            RecruitZzim recruitZzim = new RecruitZzim(user, recruit);
+            recruitZzimRepository.save(recruitZzim);
+        } else {
+            throw new NotMultiZzimException();
+        }
     }
 
     @Transactional
-    public void deleteZzim(Long zzimId) {
-        RecruitZzim recruitZzim = recruitZzimRepository.findById(zzimId).orElseThrow(NoSuchZzimException::new);
+    public void deleteZzim(User user, Recruit recruit) {
+        RecruitZzim recruitZzim = recruitZzimRepository.findByUserAndRecruit(user, recruit).orElseThrow(NoSuchZzimException::new);
         recruitZzimRepository.delete(recruitZzim);
-    }
-
-    public RecruitZzim findZzimById(Long zzimId) {
-        return recruitZzimRepository.findById(zzimId).orElseThrow(NoSuchZzimException::new);
     }
 
     private List<SubCategory> getSubCategories(List<SubCategoryCreateDto> catIds) {
@@ -194,16 +210,21 @@ public class RecruitService {
 
         RecruitReadDto recruitReadDto = new RecruitReadDto(recruit);
 
-        List<RecruitFile> thumbnailRecruitFileList = recruit.getRecruitFiles().stream()
-                .filter(file -> file.getDesc().equals(FileDescType.THUMBNAIL))
-                .collect(Collectors.toList());
+        RecruitFile thumbnailFile = getThumbFilesInRecruitFile(recruit);
 
-        if (thumbnailRecruitFileList.size() > 0) {
-            RecruitFile thumbnailRecruitFile = thumbnailRecruitFileList.get(0);
-            String thumbFileName = thumbnailRecruitFile.getFile().getFileName();
-            recruitReadDto.attachThumbnail(thumbFileName, fileBaseUrl);
+        if (thumbnailFile != null) {
+            String thumbFileName = thumbnailFile.getFile().getFileName();
+
+            String thumbFileUrl = fileStorageService.getUrl(thumbFileName);
+            recruitReadDto.attachThumbnail(thumbFileUrl);
         }
 
         return recruitReadDto;
+    }
+
+    private RecruitFile getThumbFilesInRecruitFile(Recruit recruit) {
+        return recruit.getRecruitFiles().stream()
+                .filter(file -> file.getDesc().equals(FileDescType.THUMBNAIL) && !file.getFile().getDeleted())
+                .findFirst().orElse(null);
     }
 }
